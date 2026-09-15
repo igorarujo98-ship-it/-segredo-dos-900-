@@ -103,27 +103,8 @@
       });
     }
 
-    // Animações de scroll
-    if ("IntersectionObserver" in window) {
-      var obs = new IntersectionObserver(
-        function (entradas) {
-          entradas.forEach(function (ent) {
-            if (ent.isIntersecting) {
-              ent.target.classList.add("visivel");
-              obs.unobserve(ent.target);
-            }
-          });
-        },
-        { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-      );
-      $qsa(".reveal").forEach(function (el) {
-        obs.observe(el);
-      });
-    } else {
-      $qsa(".reveal").forEach(function (el) {
-        el.classList.add("visivel");
-      });
-    }
+    // Animações de scroll (disparadas no fim do carregamento)
+    // A observação real está em observarAnimacao(), chamada após os renders.
 
     // FAQ (acordeão)
     $qsa(".faq-item").forEach(function (item) {
@@ -167,6 +148,41 @@
       var linkWa = $("#js-whatsapp");
       if (linkWa) linkWa.href = "https://wa.me/" + wa;
     }
+  }
+
+  /* ============================================================
+     ANIMAÇÃO DE SCROLL — elementos surgem ao rolar
+     ============================================================ */
+  var obsAnimacao = null;
+
+  function observarAnimacao() {
+    var alvos = $qsa(".reveal:not(.visivel), .entrada:not(.visivel)");
+    if (!alvos.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      alvos.forEach(function (el) {
+        el.classList.add("visivel");
+      });
+      return;
+    }
+
+    if (!obsAnimacao) {
+      obsAnimacao = new IntersectionObserver(
+        function (entradas) {
+          entradas.forEach(function (ent) {
+            if (ent.isIntersecting) {
+              ent.target.classList.add("visivel");
+              obsAnimacao.unobserve(ent.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      );
+    }
+
+    alvos.forEach(function (el) {
+      obsAnimacao.observe(el);
+    });
   }
 
   /* ============================================================
@@ -231,7 +247,7 @@
           })
           .join("");
         return (
-          '<article class="aula-card">' +
+          '<article class="aula-card entrada">' +
           '<div class="topo"><span class="num">AULA ' + aula.numero + "</span>" +
           '<span class="area">' + escapeHtml(aula.area) + "</span></div>" +
           "<h3>" + escapeHtml(aula.titulo) + "</h3>" +
@@ -290,7 +306,7 @@
           .join("");
 
         return (
-          '<article class="plano-card' + destaque + '">' +
+          '<article class="plano-card' + destaque + ' entrada">' +
           selo +
           '<h3 class="plano-nome">' + escapeHtml(plano.nome) + "</h3>" +
           '<div class="plano-parcela">6x de ' + fmtBRL(plano.preco) +
@@ -313,7 +329,7 @@
     alvo.innerHTML = (CONTEUDO.comoFunciona.passos || [])
       .map(function (p) {
         return (
-          '<div class="passo-card">' +
+          '<div class="passo-card entrada">' +
           '<span class="n">' + escapeHtml(p.n) + "</span>" +
           "<h3>" + escapeHtml(p.titulo) + "</h3>" +
           "<p>" + escapeHtml(p.texto) + "</p>" +
@@ -786,6 +802,9 @@
     renderAulasPublicas();
     renderPlanos();
     renderComoFunciona();
+
+    // Observa os elementos de scroll APÓS os renders dinâmicos.
+    observarAnimacao();
 
     var pagina = window.location.pathname.split("/").pop();
 

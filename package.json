@@ -5,7 +5,7 @@
   "type": "commonjs",
   "description": "Plataforma do curso O Segredo dos 900+ — Redação para o ENEM",
   "engines": {
-    "node": ">=18"
+    "node": "20.x"
   },
   "scripts": {
     "dev": "vercel dev"

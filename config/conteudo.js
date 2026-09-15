@@ -40,11 +40,11 @@
       // Editável: valor percentual ilustrativo (baseado na estrutura atual do ENEM).
       redacaoPorcentagem: 20,
       areas: [
+        { nome: "Redação", ativa: true },
         { nome: "Linguagens", ativa: false },
         { nome: "Ciências Humanas", ativa: false },
         { nome: "Ciências da Natureza", ativa: false },
         { nome: "Matemática", ativa: false },
-        { nome: "Redação", ativa: true },
       ],
       legenda:
         "Cada área tem o mesmo peso de 1000 pontos no cálculo da média — o valor percentual exato pode variar conforme a metodologia de cálculo do INEP. Por isso, dominar a redação é um dos caminhos mais previsíveis para subir a nota.",

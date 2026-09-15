@@ -450,13 +450,25 @@ section {
   background: rgba(148, 163, 184, 0.4);
 }
 
+.barra-area.ativa {
+  font-size: 1.35rem;
+  font-weight: 900;
+  margin: 6px 0;
+}
+
 .barra-area.ativa i {
   width: 20%;
+  height: 16px;
   background: linear-gradient(90deg, var(--green), var(--green2));
   box-shadow: 0 0 14px rgba(74, 222, 128, 0.8);
 }
 
-.barra-area.ativa .percent { color: var(--green2); font-weight: 800; }
+.barra-area.ativa .percent {
+  color: var(--green2);
+  font-weight: 900;
+  font-size: 2rem;
+  text-shadow: 0 0 18px rgba(74, 222, 128, 0.45);
+}
 
 .infografico .legenda {
   font-size: 0.82rem;

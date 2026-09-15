@@ -188,13 +188,6 @@
   /* ============================================================
      PÁGINA INICIAL — renderização dos blocos dinâmicos
      ============================================================ */
-  function renderHero() {
-    var professor = $("#hero-professor");
-    if (professor && CONTEUDO.hero && CONTEUDO.hero.imagemProfessor) {
-      professor.src = CONTEUDO.hero.imagemProfessor;
-    }
-  }
-
   function renderInfografico() {
     var alvo = $("#js-infografico");
     if (!alvo || !CONTEUDO.infografico) return;
@@ -797,7 +790,6 @@
      ============================================================ */
   document.addEventListener("DOMContentLoaded", function () {
     initGeral();
-    renderHero();
     renderInfografico();
     renderAulasPublicas();
     renderPlanos();

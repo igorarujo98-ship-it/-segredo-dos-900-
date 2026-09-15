@@ -19,7 +19,6 @@
     },
 
     hero: {
-      imagemProfessor: "imagens/igor sem fuundo.png",
       chamada: "Redação no ENEM não é sorte — é técnica.",
       cta: "QUERO SER 900+",
       badge: "Aprovação em Medicina · Método comprovado",

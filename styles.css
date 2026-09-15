@@ -271,10 +271,12 @@ section {
 
 .hero .container {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 40px;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
   padding-top: 120px;
   padding-bottom: 60px;
 }
@@ -315,13 +317,14 @@ section {
 .hero .frase {
   color: var(--muted);
   font-size: 1.05rem;
-  margin: 14px 0 26px;
+  margin: 14px auto 26px;
   max-width: 480px;
 }
 
 .hero-chips {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   margin-top: 22px;
 }
@@ -347,47 +350,8 @@ section {
   box-shadow: 0 0 10px rgba(74, 222, 128, 0.9);
 }
 
-.hero-foto {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-foto img {
-  width: min(420px, 90%);
-  border-radius: 26px;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  background: radial-gradient(120% 100% at 50% 0%, #14224f 0%, var(--bg-1) 60%);
-}
-
-.hero-foto .anel {
-  position: absolute;
-  width: 120%;
-  max-width: 520px;
-  aspect-ratio: 1;
-  border: 1px dashed rgba(59, 130, 246, 0.35);
-  border-radius: 50%;
-  animation: girar 40s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes girar {
-  to { transform: rotate(360deg); }
-}
-
 @media (max-width: 860px) {
-  .hero .container {
-    grid-template-columns: 1fr;
-    padding-top: 110px;
-    text-align: center;
-  }
-  .hero .frase { margin-left: auto; margin-right: auto; }
-  .hero-chips { justify-content: center; }
-  .hero-foto { order: -1; }
-  .hero-foto img { width: min(300px, 78%); }
+  .hero .container { padding-top: 110px; }
   .anim-zoom { display: none; }
 }
 

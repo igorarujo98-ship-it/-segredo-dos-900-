@@ -9,3 +9,6 @@ node_modules
 # Os PDFs protegidos ficam em api/_arquivos/ (servidos apenas pela API com login).
 /aulas/
 /materiais/
+
+# Imagens removidas do site (foto do professor já não é usada).
+imagens/

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel — Gerar acesso (admin)</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1430'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%234ade80'%3E900%2B%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+    .aviso {
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      color: #fde68a;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .resultado {
+      margin-top: 22px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+      display: none;
+    }
+    .resultado .codigo {
+      font-family: monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--green2);
+      background: var(--bg-0);
+      border: 1px dashed var(--green);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      user-select: all;
+      margin: 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">O SEGREDO DOS <span class="plus">900+</span></a>
+      <nav class="nav-acoes">
+        <a href="login.html" class="btn btn--contorno btn-diminuir">Área do Aluno</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="padding-top: 110px; padding-bottom: 40px;">
+    <section style="padding: 0;">
+      <div class="container">
+        <div class="form-card" style="max-width: 560px;">
+          <div class="sec-cabecalho" style="margin-bottom: 6px;">
+            <span class="badge badge--verde">Somente administrador</span>
+            <h1 style="font-size: 1.6rem; margin-top: 12px;">Gerar acesso grátis</h1>
+            <p class="mutado" style="margin: 0;">
+              Gere um código de acesso manualmente (ex.: para presentear alguém),
+              <strong>sem passar por pagamento</strong>.
+            </p>
+          </div>
+
+          <div class="aviso">
+            ⚠️ Este painel pula a etapa do Mercado Pago. Use apenas para cortesias.
+            Qualquer pessoa com a sua <strong>ADMIN_KEY</strong> consegue gerar acessos.
+          </div>
+
+          <div class="alerta" id="js-alerta" role="alert"></div>
+
+          <form id="js-form-admin" novalidate>
+            <div class="form-grid">
+              <div class="campo full">
+                <label for="campo-admin-key">Chave de administrador (ADMIN_KEY) <span class="req">*</span></label>
+                <input type="password" id="campo-admin-key" placeholder="Sua ADMIN_KEY da Vercel" required />
+              </div>
+
+              <div class="campo full">
+                <label for="campo-nome">Nome completo <span class="req">*</span></label>
+                <input type="text" id="campo-nome" placeholder="Nome do amigo" required />
+              </div>
+
+              <div class="campo full">
+                <label for="campo-email">E-mail <span class="req">*</span></label>
+                <input type="email" id="campo-email" placeholder="emaildoamigo@exemplo.com" required />
+              </div>
+
+              <div class="campo">
+                <label for="campo-whatsapp">WhatsApp</label>
+                <input type="tel" id="campo-whatsapp" placeholder="(opcional)" />
+              </div>
+
+              <div class="campo">
+                <label for="campo-cpf">CPF</label>
+                <input type="text" id="campo-cpf" placeholder="(opcional)" />
+              </div>
+
+              <div class="campo">
+                <label for="campo-plano">Plano <span class="req">*</span></label>
+                <select id="campo-plano">
+                  <option value="basico">Plano Básico</option>
+                  <option value="ultra">Plano Ultra</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label for="campo-validade">Validade (dias) <span class="req">*</span></label>
+                <input type="number" id="campo-validade" value="365" min="1" max="3660" required />
+                <p class="ajuda">Padrão: 365 dias (1 ano).</p>
+              </div>
+
+              <div class="campo full">
+                <label class="termos-bloco" style="width: 100%; cursor: pointer; display: flex; align-items: flex-start;">
+                  <input type="checkbox" id="campo-enviar-email" checked style="width: auto; margin-top: 4px;" />
+                  <span style="margin-left: 10px;">Enviar o código por e-mail para o amigo agora.</span>
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--primario btn--bloco" id="js-btn-gerar" style="margin-top: 20px;">
+              GERAR ACESSO
+            </button>
+          </form>
+
+          <div class="resultado" id="js-resultado">
+            <h3 style="margin-bottom: 4px;">Acesso gerado! 🎉</h3>
+            <p class="mutado" style="margin: 0;">Código de acesso do amigo (copie e envie):</p>
+            <div class="codigo" id="js-codigo">—</div>
+            <p class="mutado" style="font-size: 0.85rem; margin: 0;">
+              Plano: <b id="js-result-plano">—</b> · Válido até <b id="js-result-expira">—</b><br />
+              <span id="js-result-email-msg">O código também foi enviado para o e-mail dele(a).</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="config/planos.js"></script>
+  <script src="config/aulas.js"></script>
+  <script src="config/conteudo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

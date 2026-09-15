@@ -1,0 +1,16 @@
+{
+  "name": "o-segredo-dos-900-mais",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Plataforma do curso O Segredo dos 900+ — Redação para o ENEM",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "devDependencies": {
+    "vercel": "^34.0.0"
+  }
+}

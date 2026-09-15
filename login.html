@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Área do Aluno — Login</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1430'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%234ade80'%3E900%2B%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 4% 40px;
+      background:
+        radial-gradient(700px 400px at 15% 0%, rgba(59, 130, 246, 0.18), transparent 60%),
+        radial-gradient(700px 420px at 90% 100%, rgba(34, 197, 94, 0.14), transparent 60%);
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">O SEGREDO DOS <span class="plus">900+</span></a>
+      <nav class="nav-acoes">
+        <a href="index.html" class="btn btn--contorno btn-diminuir">← Voltar ao início</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="width: 100%;">
+    <div class="form-card login-card">
+      <div class="login-icone">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+      </div>
+      <h1 style="font-size: 1.8rem; text-align: center;">Área do Aluno</h1>
+      <p class="mutado texto-centro" style="margin-bottom: 22px;">
+        Entre com o <strong>e-mail</strong> usado na compra e o <strong>código de acesso</strong> recebido.
+      </p>
+
+      <div class="alerta" id="js-alerta" role="alert"></div>
+
+      <form id="js-form-login" novalidate>
+        <div class="campo full">
+          <label for="campo-email">E-mail</label>
+          <input type="email" id="campo-email" autocomplete="email" placeholder="seu@email.com" required />
+        </div>
+        <div class="campo full" style="margin-top: 14px;">
+          <label for="campo-codigo">Código de acesso</label>
+          <input type="text" id="campo-codigo" placeholder="900PLUS-XXXX-XXXX" autocomplete="off" required style="font-family: monospace; letter-spacing: 1px;" />
+        </div>
+        <button type="submit" class="btn btn--primario btn--bloco" id="js-btn-login" style="margin-top: 22px;">
+          ENTRAR NA ÁREA DO ALUNO
+        </button>
+      </form>
+
+      <div class="login-exemplo">
+        Exemplo de código: <strong>900PLUS-X7K4-29QF</strong>
+      </div>
+      <p class="mutado texto-centro" style="font-size: 0.85rem; margin-top: 18px; margin-bottom: 0;">
+        Não recebeu seu código? Verifique o spam ou fale com o suporte no WhatsApp.
+      </p>
+    </div>
+  </main>
+
+  <script src="config/planos.js"></script>
+  <script src="config/aulas.js"></script>
+  <script src="config/conteudo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+node_modules
+.vercel
+.env
+.env.local
+*.log
+.DS_Store
+
+# Cópias locais de referência — NÃO incluir no deploy.
+# Os PDFs protegidos ficam em api/_arquivos/ (servidos apenas pela API com login).
+aulas/
+materiais/

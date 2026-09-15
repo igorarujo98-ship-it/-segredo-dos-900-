@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/material.js": {
+      "runtime": "nodejs18.x",
+      "includeFiles": "api/_arquivos/**"
+    },
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}

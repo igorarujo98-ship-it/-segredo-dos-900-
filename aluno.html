@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Área do Aluno — O Segredo dos 900+</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1430'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%234ade80'%3E900%2B%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="aluno-tela">
+    <header class="aluno-topo">
+      <div class="container">
+        <a href="index.html" class="logo">O SEGREDO DOS <span class="plus">900+</span></a>
+        <div class="perfil">
+          <div class="avatar" id="js-avatar">?</div>
+          <div class="quem">
+            <b id="js-nome-topo">—</b>
+            <span id="js-plano-topo">—</span>
+          </div>
+          <button class="btn btn--contorno" id="js-sair" type="button" style="padding: 9px 16px; font-size: 0.82rem;">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="aluno-corpo">
+      <div class="container">
+        <div class="saudacao">
+          <h1>Olá, <span class="gota" id="js-saudacao-nome">…</span>! 👋</h1>
+          <p class="mutado" id="js-saudacao-sub">Bem-vindo(a) à sua área do aluno.</p>
+        </div>
+
+        <div class="cards-status">
+          <div class="status-card">
+            <div class="rot">Plano contratado</div>
+            <div class="val" id="js-status-plano">—</div>
+          </div>
+          <div class="status-card">
+            <div class="rot">Acesso liberado em</div>
+            <div class="val" id="js-status-liberado">—</div>
+          </div>
+          <div class="status-card">
+            <div class="rot">Acesso válido até</div>
+            <div class="val" id="js-status-expira">—</div>
+          </div>
+          <div class="status-card">
+            <div class="rot">Status do acesso</div>
+            <div class="val ok" id="js-status-status">ATIVO</div>
+          </div>
+        </div>
+
+        <div class="upgrade-banner escondido" id="js-upgrade-banner">
+          <div>
+            <h3>Desbloqueie o material exclusivo 🚀</h3>
+            <p>
+              O <strong>10 temas de redação com modelo nota mil pronto</strong> é exclusivo do Plano Ultra.
+              Faça o upgrade para ter acesso a esse material e a todo o curso.
+            </p>
+          </div>
+          <a class="btn btn--primario" id="js-upgrade-btn" href="#">FAZER UPGRADE PARA ULTRA</a>
+        </div>
+
+        <div class="sec-cabecalho" style="margin-bottom: 24px;">
+          <h2>Suas aulas</h2>
+          <p class="mutado" style="margin: 0;">Clique nos cards para abrir o vídeo e baixar os materiais.</p>
+        </div>
+        <div class="aulas-aluno-grid" id="js-aulas-aluno"></div>
+
+        <div class="material-aluno escondido" id="js-material-ultra">
+          <div class="info">
+            <h3>10 temas de redação com modelo nota mil pronto</h3>
+            <p>Seu material exclusivo do Plano Ultra, pronto para download.</p>
+          </div>
+          <a class="btn btn--primario" id="js-material-baixar" href="#">BAIXAR MATERIAL</a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      <div class="container">
+        <div class="rodape-copy">
+          <span>© <span id="ano"></span> O Segredo dos 900+ · Todos os direitos reservados.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="config/planos.js"></script>
+  <script src="config/aulas.js"></script>
+  <script src="config/conteudo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

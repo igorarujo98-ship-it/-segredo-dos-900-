@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro — O Segredo dos 900+</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1430'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%234ade80'%3E900%2B%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">O SEGREDO DOS <span class="plus">900+</span></a>
+      <nav class="nav-acoes">
+        <a href="index.html#planos" class="btn btn--contorno btn-diminuir">← Voltar aos planos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="padding-top: 110px; padding-bottom: 70px;">
+    <section style="padding: 0;">
+      <div class="container">
+        <div class="form-card reveal visivel">
+          <div class="sec-cabecalho" style="margin-bottom: 22px;">
+            <span class="badge">Etapa 1 de 3 · Cadastro</span>
+            <h1 style="font-size: 1.8rem; margin-top: 14px;">Preencha seus dados</h1>
+            <p class="mutado" style="margin: 0;">
+              Depois você confirma o plano e é direcionado ao checkout do Mercado Pago.
+            </p>
+          </div>
+
+          <div class="form-resumo-plano" id="js-resumo-plano" style="display: none;">
+            <span>Plano escolhido: <b id="js-plano-nome">—</b></span>
+            <span><b id="js-plano-preco">—</b></span>
+          </div>
+
+          <div class="alerta" id="js-alerta" role="alert"></div>
+
+          <form id="js-form-cadastro" novalidate>
+            <div class="form-grid">
+              <div class="campo full">
+                <label for="campo-nome">Nome completo <span class="req">*</span></label>
+                <input type="text" id="campo-nome" name="nome" autocomplete="name" placeholder="Seu nome completo" required />
+                <p class="erro-campo">Informe seu nome completo.</p>
+              </div>
+
+              <div class="campo full">
+                <label for="campo-cpf">CPF <span class="req">*</span></label>
+                <input type="text" id="campo-cpf" name="cpf" inputmode="numeric" placeholder="000.000.000-00" required />
+                <p class="erro-campo">Informe um CPF válido (11 dígitos).</p>
+              </div>
+
+              <div class="campo full">
+                <label for="campo-email">E-mail <span class="req">*</span></label>
+                <input type="email" id="campo-email" name="email" autocomplete="email" placeholder="seu@email.com" required />
+                <p class="erro-campo">Informe um e-mail válido. É ele que receberá seu código de acesso.</p>
+              </div>
+
+              <div class="campo full">
+                <label for="campo-email-confirm">Confirme seu e-mail <span class="req">*</span></label>
+                <input type="email" id="campo-email-confirm" name="emailConfirm" autocomplete="off" placeholder="Digite o e-mail novamente" required />
+                <p class="erro-campo">Os e-mails informados não são iguais.</p>
+              </div>
+
+              <div class="campo full">
+                <label for="campo-whatsapp">WhatsApp <span class="req">*</span></label>
+                <input type="tel" id="campo-whatsapp" name="whatsapp" autocomplete="tel" placeholder="(99) 98266-1111" required />
+                <p class="ajuda">Inclua o DDD. Ex.: (99) 98266-1111</p>
+                <p class="erro-campo">Informe um WhatsApp válido com DDD.</p>
+              </div>
+
+              <div class="campo full">
+                <label class="termos-bloco" style="width: 100%; cursor: pointer; display: flex; align-items: flex-start;">
+                  <input type="checkbox" id="campo-termos" style="width: auto; margin-top: 4px;" />
+                  <span style="margin-left: 10px;">
+                    Ao adquirir este curso, você declara estar ciente de que o conteúdo é destinado
+                    exclusivamente ao seu uso pessoal e intransferível. É proibido compartilhar, revender,
+                    copiar, gravar, reproduzir, distribuir, publicar ou disponibilizar os vídeos, PDFs,
+                    aulas, materiais e demais conteúdos da plataforma sem autorização.
+                  </span>
+                </label>
+                <p class="erro-campo">Você precisa concordar com os termos de uso e direitos autorais.</p>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn--primario btn--bloco" id="js-btn-cadastro" style="margin-top: 22px;">
+              IR PARA O PAGAMENTO
+            </button>
+            <p class="mutado" style="font-size: 0.8rem; text-align: center; margin: 14px 0 0;">
+              Pagamento seguro via <strong>Mercado Pago</strong> — em até 6x sem juros.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="config/planos.js"></script>
+  <script src="config/aulas.js"></script>
+  <script src="config/conteudo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

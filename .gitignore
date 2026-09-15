@@ -7,5 +7,5 @@ node_modules
 
 # Cópias locais de referência — NÃO incluir no deploy.
 # Os PDFs protegidos ficam em api/_arquivos/ (servidos apenas pela API com login).
-aulas/
-materiais/
+/aulas/
+/materiais/

@@ -1,11 +1,11 @@
-/**
+﻿/**
  * GET /api/auth/me
  * Valida a sessão do aluno (header x-sessao ou ?sessao=) e devolve os dados
  * públicos. Bloqueia acesso expirado.
  */
-const { ok, erro, extrairSessao } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const tokenLib = require("../lib/token.js");
+const { ok, erro, extrairSessao } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const tokenLib = require("../_lib/token.js");
 
 module.exports = async function handler(req, res) {
   try {

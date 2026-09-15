@@ -1,10 +1,10 @@
-/**
+﻿/**
  * GET /api/payment/status?aluno=ID
  * Usado pela página de sucesso para acompanhar a confirmação do pagamento.
  * Retorna o status geral (pendente/approved) sem expor o token.
  */
-const { ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
+const { ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
 
 module.exports = async function handler(req, res) {
   try {

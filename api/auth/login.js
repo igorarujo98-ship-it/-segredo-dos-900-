@@ -1,11 +1,11 @@
-/**
+﻿/**
  * POST /api/auth/login
  * Autentica o aluno com E-mail + Código de acesso (token).
  * Body: { email, codigo }
  */
-const { lerJson, ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const tokenLib = require("../lib/token.js");
+const { lerJson, ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const tokenLib = require("../_lib/token.js");
 const PLANOS = require("../../config/planos.js");
 
 module.exports = async function handler(req, res) {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GET /api/material?aula=aula1&sessao=...   ou
  * GET /api/material?material=exclusivo&sessao=...
  *
@@ -8,9 +8,9 @@
  */
 const path = require("path");
 const fs = require("fs");
-const { erro, extrairSessao } = require("./lib/http.js");
-const alunos = require("./lib/alunos.js");
-const tokenLib = require("./lib/token.js");
+const { erro, extrairSessao } = require("./_lib/http.js");
+const alunos = require("./_lib/alunos.js");
+const tokenLib = require("./_lib/token.js");
 const AULAS = require("../config/aulas.js");
 const PLANOS = require("../config/planos.js");
 

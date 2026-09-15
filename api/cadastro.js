@@ -1,10 +1,10 @@
-/**
+﻿/**
  * POST /api/cadastro
  * Cadastra o aluno (status pendente) ANTES de seguir para o pagamento.
  * Body: { nome, cpf, email, emailConfirm, whatsapp, plano }
  */
-const { lerJson, ok, erro } = require("./lib/http.js");
-const alunos = require("./lib/alunos.js");
+const { lerJson, ok, erro } = require("./_lib/http.js");
+const alunos = require("./_lib/alunos.js");
 const PLANOS = require("../config/planos.js");
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

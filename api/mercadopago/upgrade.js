@@ -1,13 +1,13 @@
-/**
+﻿/**
  * POST /api/mercadopago/upgrade
  * Gera o pagamento de UPGRADE para o Plano Ultra usando a sessão do aluno
  * (que já está logado). O webhook reconhece o plano pelo título do item e
  * altera o plano do mesmo aluno para "ultra".
  * Body: { sessao }
  */
-const { lerJson, ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const mp = require("../lib/mercadopago.js");
+const { lerJson, ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const mp = require("../_lib/mercadopago.js");
 const PLANOS = require("../../config/planos.js");
 
 module.exports = async function handler(req, res) {

@@ -1,12 +1,12 @@
-/**
+﻿/**
  * POST /api/email/enviar-token
  * Reenvio MANUAL do e-mail com o código, feito pelo admin (professor).
  * Header: x-admin-key  (valor da variável ADMIN_KEY)
  * Body: { codigo }   (código de acesso do aluno)
  */
-const { lerJson, ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const mailer = require("../lib/mailer.js");
+const { lerJson, ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const mailer = require("../_lib/mailer.js");
 const PLANOS = require("../../config/planos.js");
 
 module.exports = async function handler(req, res) {

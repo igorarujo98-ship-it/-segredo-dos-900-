@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/admin/gerar-acesso
  * Gera um acesso MANUAL (sem pagamento) — ex.: presentear um amigo.
  * Requer o header x-admin-key com o valor de ADMIN_KEY (variável de ambiente).
@@ -13,9 +13,9 @@
  *   enviarEmail?: boolean (padrão true)
  * }
  */
-const { lerJson, ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const mailer = require("../lib/mailer.js");
+const { lerJson, ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const mailer = require("../_lib/mailer.js");
 const PLANOS = require("../../config/planos.js");
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;

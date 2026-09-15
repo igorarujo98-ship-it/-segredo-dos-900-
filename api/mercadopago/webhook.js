@@ -1,4 +1,4 @@
-/**
+﻿/**
  * POST /api/mercadopago/webhook
  *
  * Recebe a notificação do Mercado Pago, CONSULTA A API para confirmar o
@@ -10,10 +10,10 @@
  * Nunca confiamos no conteúdo da notificação: validamos na API do Mercado Pago.
  * Webhooks duplicados não geram token/e-mail em dobro (idempotência).
  */
-const { lerCorpo, ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const mp = require("../lib/mercadopago.js");
-const mailer = require("../lib/mailer.js");
+const { lerCorpo, ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const mp = require("../_lib/mercadopago.js");
+const mailer = require("../_lib/mailer.js");
 const PLANOS = require("../../config/planos.js");
 
 function idDoCorpo(body) {

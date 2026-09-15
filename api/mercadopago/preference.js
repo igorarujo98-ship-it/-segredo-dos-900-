@@ -1,12 +1,12 @@
-/**
+﻿/**
  * POST /api/mercadopago/preference
  * Cria a preferência (Checkout Pro) no Mercado Pago já vinculada ao aluno,
  * e devolve a URL para onde o navegador será redirecionado.
  * Body: { alunoId, plano }
  */
-const { lerJson, ok, erro } = require("../lib/http.js");
-const alunos = require("../lib/alunos.js");
-const mp = require("../lib/mercadopago.js");
+const { lerJson, ok, erro } = require("../_lib/http.js");
+const alunos = require("../_lib/alunos.js");
+const mp = require("../_lib/mercadopago.js");
 const PLANOS = require("../../config/planos.js");
 
 module.exports = async function handler(req, res) {

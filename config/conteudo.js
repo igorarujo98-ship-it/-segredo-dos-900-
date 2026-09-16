@@ -45,8 +45,7 @@
         { nome: "Ciências da Natureza", ativa: false },
         { nome: "Matemática", ativa: false },
       ],
-      legenda:
-        "Cada área tem o mesmo peso de 1000 pontos no cálculo da média — o valor percentual exato pode variar conforme a metodologia de cálculo do INEP. Por isso, dominar a redação é um dos caminhos mais previsíveis para subir a nota.",
+      legenda: "",
       notaMaxima: "nota máxima 1000",
       passo1: "Maior peso individual da prova",
       passo2: "Previsível para quem treina",

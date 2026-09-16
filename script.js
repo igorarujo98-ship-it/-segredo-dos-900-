@@ -215,7 +215,7 @@
     if (info.passo2) passos += '<div class="passo"><b>02</b>' + escapeHtml(info.passo2) + "</div>";
     if (passos) html += '<div class="passos">' + passos + "</div>";
 
-    html += '<p class="legenda">' + escapeHtml(info.legenda) + "</p>";
+    if (info.legenda) html += '<p class="legenda">' + escapeHtml(info.legenda) + "</p>";
 
     alvo.innerHTML = html;
   }

@@ -51,10 +51,6 @@ async function criarPreferencia({ plano, aluno }) {
   };
 
   try {
-    // Plano de teste (R$1): mantém o PIX disponível para facilitar a validação.
-    if (plano.id === "teste") {
-      return gravarPreferencia(preferencia, access);
-    }
     // Oferta 1: exclui o PIX (politica do curso: apenas cartão / Mercado Pago).
     const corpo = JSON.parse(JSON.stringify(preferencia));
     corpo.payment_methods.excluded_payment_methods = [{ id: "pix" }];

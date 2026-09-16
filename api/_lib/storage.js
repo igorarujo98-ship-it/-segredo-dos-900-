@@ -127,16 +127,27 @@ async function set(key, value, ttlSeconds) {
  * Grava SOMENTE se a chave ainda não existir (atomic).
  * Retorna true se gravou; false se a chave já existia.
  * Usado para linkar pagamento->aluno e garantir idempotência de webhook.
+ *
+ * usa o comando dedicado SETNX da REST API (sem query params NX, que a
+ * versão atual do Upstash rejeita com "ERR syntax error"). O TTL é aplicado
+ * depois via EXPIRE (mesmo mecanismo já usado nas sessões, que funciona).
  */
 async function setnx(key, value, ttlSeconds) {
   if (!temKV()) {
     return setnxLocal(key, value, ttlSeconds);
   }
-  let url = BASE + "/set/" + encodeURIComponent(key) + "?NX=1";
-  if (ttlSeconds) url += "&EX=" + Math.floor(ttlSeconds);
   const corpo = typeof value === "string" ? value : JSON.stringify(value);
-  const dados = await comando(url, { method: "POST", body: corpo });
-  return dados && dados.result === "OK";
+  const dados = await comando(BASE + "/setnx/" + encodeURIComponent(key), {
+    method: "POST",
+    body: corpo,
+  });
+  const criou = dados && (dados.result === 1 || dados.result === "1" || dados.result === "OK");
+  if (criou && ttlSeconds) {
+    try {
+      await expire(key, ttlSeconds);
+    } catch (_e) {}
+  }
+  return !!criou;
 }
 
 /** Remove uma chave. */

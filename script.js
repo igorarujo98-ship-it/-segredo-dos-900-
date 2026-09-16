@@ -732,58 +732,78 @@
 
     if (!alunoId) {
       titulo.textContent = "Pagamento em andamento";
-      mensagem.textContent = "Assim que o Mercado Pago confirmar a aprovação, seu acesso será liberado automaticamente. Aguarde o e-mail com seu código de acesso.";
+      mensagem.textContent = "Assim que o Mercado Pago confirmar a aprovação, seu acesso será liberado e seu código aparecerá aqui (e irá para seu e-mail).";
       return;
     }
 
     var tentativas = 0;
 
-    function renderPendente() {
+    function renderAprovado(dados) {
+      icone.className = "sucesso-icone ok";
+      icone.textContent = "✓";
+      titulo.textContent = "Pagamento confirmado! 🎉";
+      mensagem.textContent =
+        "Seu acesso foi liberado. Copie seu código abaixo e use no login.";
+      passos.classList.remove("escondido");
+      $qsa("p", passos).forEach(function (p) {
+        p.style.display = "flex";
+      });
+      var token = (dados && dados.token) || "";
+      if (token) {
+        var bloco = $("#js-bloco-codigo");
+        if (bloco) bloco.classList.remove("escondido");
+        var codigoEl = $("#js-codigo");
+        if (codigoEl) codigoEl.textContent = token;
+      }
+      acoes.innerHTML =
+        '<a class="btn btn--primario btn--bloco" href="login.html">ENTRAR COM MEU CÓDIGO</a>' +
+        '<div class="btn-sessoes">' +
+        '<a class="btn btn--contorno" href="index.html">VOLTAR AO INÍCIO</a>' +
+        "</div>";
+      rodapeMsg.textContent =
+        "O código também foi enviado para seu e-mail. Ele é individual e intransferível.";
+    }
+
+    function renderAguardando() {
       icone.className = "sucesso-icone pendente";
       icone.textContent = "…";
       titulo.textContent = "Aguardando confirmação do pagamento";
       mensagem.innerHTML =
-        "<span class=\"spinner\"></span> Seu pagamento ainda não foi confirmado. Assim que o Mercado Pago confirmar a aprovação, seu acesso será liberado automaticamente.";
+        "<span class=\"spinner\"></span> Seu pagamento ainda não foi confirmado. Assim que o Mercado Pago confirmar, seu código de acesso aparece aqui.";
       passos.classList.add("escondido");
       acoes.innerHTML =
         '<a class="btn btn--contorno" href="index.html">VOLTAR AO INÍCIO</a>';
       rodapeMsg.textContent = "Não feche esta página enquanto aguarda.";
     }
 
-    function renderAprovado() {
-      icone.className = "sucesso-icone ok";
-      icone.textContent = "✓";
-      titulo.textContent = "Pagamento confirmado! 🎉";
-      mensagem.textContent =
-        "Seu pagamento foi aprovado. Seu código de acesso foi enviado para seu e-mail.";
-      passos.classList.remove("escondido");
-      $qsa("p", passos).forEach(function (p) { p.style.display = "flex"; });
-      acoes.innerHTML =
-        '<h3 style="margin-top: 18px;">VERIFIQUE SUA CAIXA DE ENTRADA</h3>' +
-        '<p class="mutado">Caso não encontre o e-mail, verifique também a pasta de spam/lixo eletrônico.</p>' +
-        '<a class="btn btn--primario btn--bloco" href="aluno.html">ACESSAR ÁREA DO ALUNO</a>' +
-        '<div class="btn-sessoes">' +
-        '<a class="btn btn--contorno" href="login.html">Já tenho o código — Entrar</a>' +
-        "</div>";
-      rodapeMsg.textContent = "Seu código de acesso é individual e intransferível.";
-    }
-
     async function consultar() {
       try {
         var r = await api("/api/payment/status?aluno=" + encodeURIComponent(alunoId));
         if (r.ok && r.dados.aprovado) {
-          renderAprovado();
+          renderAprovado(r.dados);
           return;
         }
       } catch (_e) {}
 
       tentativas += 1;
-      if (tentativas < 75) {
-        renderPendente();
+      // Mantém a consulta por até ~10 minutos (150 tentativas de 4s).
+      if (tentativas < 150) {
+        renderAguardando();
         setTimeout(consultar, 4000);
       } else {
-        renderPendente();
-        rodapeMsg.textContent = "Você pode fechar esta página. O código chegará por e-mail assim que o pagamento for aprovado.";
+        renderAguardando();
+        acoes.innerHTML =
+          '<a class="btn btn--contorno" href="login.html">Já tenho o código — Entrar</a>' +
+          '<button type="button" class="btn btn--primario btn--bloco" id="js-reconsultar" style="margin-top: 12px;">VERIFICAR NOVAMENTE</button>';
+        rodapeMsg.textContent =
+          "Se o pagamento foi feito, atualize esta página (F5) para ver seu código de acesso. Você também pode usar o botão acima.";
+        var btn = $("#js-reconsultar");
+        if (btn) {
+          btn.addEventListener("click", function () {
+            tentativas = 0;
+            consultar();
+          });
+        }
       }
     }
 

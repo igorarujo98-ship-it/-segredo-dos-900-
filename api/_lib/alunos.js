@@ -122,6 +122,44 @@ async function listarAlunos() {
 }
 
 /**
+ * Exclui um aluno e TODOS os registros relacionados: índice de e-mail,
+ * índice de token, sessões ativas, vínculos de pagamento e de webhook.
+ * Retorna um resumo do que foi removido, ou null se o aluno não existir.
+ */
+async function excluirAluno(id) {
+  if (!id) return null;
+  const aluno = await buscarAluno(id);
+  if (!aluno) return null;
+
+  const removidos = { aluno: 0, email: 0, token: 0, sessoes: 0, pagamentos: 0, webhooks: 0 };
+
+  if (await storage.del(PREFIXO_ALUNO + aluno.id)) removidos.aluno++;
+
+  if (aluno.email && (await storage.del(PREFIXO_EMAIL + normalizarEmail(aluno.email)))) {
+    removidos.email++;
+  }
+
+  if (aluno.token && (await storage.del(PREFIXO_TOKEN + aluno.token))) {
+    removidos.token++;
+  }
+
+  async function apagarVinculos(prefixo, contador) {
+    const chaves = await storage.keys(prefixo + "*");
+    for (const chave of chaves) {
+      if ((await storage.get(chave)) === aluno.id) {
+        if (await storage.del(chave)) removidos[contador]++;
+      }
+    }
+  }
+
+  await apagarVinculos(PREFIXO_SESSAO, "sessoes");
+  await apagarVinculos(PREFIXO_PAGAMENTO, "pagamentos");
+  await apagarVinculos(PREFIXO_WEBHOOK, "webhooks");
+
+  return removidos;
+}
+
+/**
  * Marca um upgrade pendente no aluno. Quando o pagamento do upgrade for
  * aprovado, o webhook move o aluno para o plano de destino (ex.: "ultra").
  */
@@ -216,6 +254,7 @@ module.exports = {
   buscarPorEmail,
   buscarPorToken,
   listarAlunos,
+  excluirAluno,
   registrarPagamentoAprovado,
   marcarUpgradePendente,
   limparUpgradePendente,

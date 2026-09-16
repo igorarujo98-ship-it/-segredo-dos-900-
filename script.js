@@ -682,6 +682,52 @@
       }
     }
 
+    async function excluirAluno(id) {
+      var aluno = null;
+      for (var i = 0; i < cache.length; i++) {
+        if (String(cache[i].id) === String(id)) {
+          aluno = cache[i];
+          break;
+        }
+      }
+      if (!aluno) return;
+
+      var chave = campoChave.value.trim();
+      if (!chave) {
+        setAlerta("Informe a ADMIN_KEY para excluir.", "erro");
+        return;
+      }
+
+      var rotulo = aluno.nome || aluno.email || aluno.id;
+      var confirmar = window.confirm(
+        'Excluir definitivamente o aluno "' +
+          rotulo +
+          '"?\n\nIsso apaga o cadastro, o código de acesso e as sessões. Não pode ser desfeito.'
+      );
+      if (!confirmar) return;
+
+      try {
+        var r = await api("/api/admin/excluir-aluno", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-key": chave },
+          body: JSON.stringify({ id: aluno.id }),
+        });
+
+        if (r.ok) {
+          cache = cache.filter(function (a) {
+            return String(a.id) !== String(aluno.id);
+          });
+          renderizar();
+          setAlerta("Aluno excluído: " + rotulo + ".", "ok");
+        } else {
+          setAlerta(r.dados.erro || "Falha ao excluir o aluno.", "erro");
+        }
+      } catch (err) {
+        console.error("excluir-aluno:", err);
+        setAlerta("Erro de conexão ao excluir o aluno.", "erro");
+      }
+    }
+
     function renderizar() {
       var busca = (campoBusca.value || "").trim().toLowerCase();
       var statusF = campoStatus.value;
@@ -726,7 +772,10 @@
             (a.token ? "" : " disabled") +
             ">" +
             (a.email_enviado ? "Reenviar e-mail" : "Enviar e-mail") +
-            "</button>";
+            "</button> " +
+            '<button type="button" class="acao-btn acao-btn--excluir" data-excluir="' +
+            escapeHtml(a.id) +
+            '">Excluir</button>';
 
           return (
             "<tr>" +
@@ -751,10 +800,15 @@
     if (campoBusca) campoBusca.addEventListener("input", renderizar);
     if (campoStatus) campoStatus.addEventListener("change", renderizar);
 
-    // Delegação de cliques: copiar código / reenviar e-mail.
+    // Delegação de cliques: copiar código / reenviar e-mail / excluir aluno.
     corpoTabela.addEventListener("click", function (e) {
       var botao = e.target.closest ? e.target.closest("button") : null;
       if (!botao || botao.disabled) return;
+
+      if (botao.hasAttribute("data-excluir")) {
+        excluirAluno(botao.getAttribute("data-excluir") || "");
+        return;
+      }
 
       var codigo = botao.getAttribute("data-copiar") || botao.getAttribute("data-reenviar");
       if (!codigo) return;

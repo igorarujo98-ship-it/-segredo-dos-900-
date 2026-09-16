@@ -16,7 +16,7 @@ function accessToken() {
 /**
  * Cria a preferência de pagamento (Checkout Pro) associando o aluno.
  * Assim o webhook consegue vincular Pagamento -> Aluno -> Plano -> Token.
- * O pagamento fica em até 6x e SEM PIX (somente cartão).
+ * O pagamento aceita PIX (valor cheio) e cartão em até 6x.
  */
 async function criarPreferencia({ plano, aluno }) {
   const urlBase = (process.env.APP_URL || "http://localhost:3000").replace(/\/+$/, "");
@@ -59,17 +59,8 @@ async function criarPreferencia({ plano, aluno }) {
     },
   };
 
-  try {
-    // Oferta 1: exclui o PIX (politica do curso: apenas cartão / Mercado Pago).
-    const corpo = JSON.parse(JSON.stringify(preferencia));
-    corpo.payment_methods.excluded_payment_methods = [{ id: "pix" }];
-    const resp = await gravarPreferencia(corpo, access);
-    return resp;
-  } catch (_erro) {
-    // Oferta 2 (fallback de compatibilidade): sem exclusão do PIX.
-    const resp = await gravarPreferencia(preferencia, access);
-    return resp;
-  }
+  // PIX habilitado: paga o valor cheio à vista (sem parcelamento).
+  return gravarPreferencia(preferencia, access);
 }
 
 async function gravarPreferencia(preferencia, access) {

@@ -15,9 +15,9 @@
       id: "basico",
       nome: "Plano Básico",
       preco: 24.99, // parcela exibida no site (6x)
-      // Valor cobrado à vista (base do checkout). O MP soma juros no parcelado;
-      // este valor foi calibrado para o 6x sair ~R$ 24,99 (financiado = R$ 149,94).
-      precoTotal: 131.15,
+      // Valor cheio (PIX / à vista). Exige "parcelamento sem juros até 6x" ativo
+      // na conta do Mercado Pago para o 6x sair R$ 24,99.
+      precoTotal: 149.94,
       parcelas: 6,
       urlPagamento: "https://mpago.li/2svJUT5", // link Mercado Pago (fallback)
     },
@@ -26,7 +26,7 @@
       id: "ultra",
       nome: "Plano Ultra",
       preco: 33.99, // parcela exibida no site (6x)
-      precoTotal: 178.38, // 6x ~R$ 33,99 (financiado = R$ 203,94)
+      precoTotal: 203.94, // valor cheio (PIX / à vista)
       parcelas: 6,
       urlPagamento: "https://mpago.li/1bTigpL", // link Mercado Pago (fallback)
       incluimaterialExclusivo: true, // acesso ao "10 temas com modelo nota mil"
@@ -38,7 +38,7 @@
       nome: "Upgrade para o Plano Ultra",
       planoDestino: "ultra", // plano liberado após o pagamento
       preco: 13.99, // parcela exibida no site (6x)
-      precoTotal: 73.42, // 6x ~R$ 13,99 (financiado = R$ 83,94)
+      precoTotal: 83.94, // valor cheio (PIX / à vista)
       parcelas: 6,
     },
 

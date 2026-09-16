@@ -222,7 +222,33 @@ chegou, o código também aparece na tela do painel para você copiar e enviar.
 >   -d '{"nome":"João Silva","email":"joao@email.com","plano":"basico","diasValidade":365}'
 > ```
 
-### 4.11 Testar o login LOCALMENTE (sem Vercel KV)
+### 4.11 Consultar alunos e recuperar códigos perdidos
+
+O painel `admin.html` também tem a aba **"Alunos & códigos"**, que:
+
+1. Lista **todos os alunos** (liberados e pendentes), do mais recente para o mais antigo;
+2. Mostra o **plano**, **status**, datas de liberação/expiração e o **código de acesso** de cada um;
+3. Permite **copiar o código** (para entregar de novo a um aluno que perdeu) e
+   **reenviar o e-mail** com o código (usa o endpoint `enviar-token`).
+
+Passo a passo:
+
+1. Acesse `https://SEU-APP.vercel.app/admin.html` e clique na aba **Alunos & códigos**;
+2. Digite a **ADMIN_KEY** e clique em **CARREGAR ALUNOS**;
+3. Filtre por status (todos / liberados / pendentes) ou busque por nome/e-mail;
+4. Para recuperar um código: **Copiar** (envie por WhatsApp/e-mail você mesmo) ou
+   **Reenviar e-mail** (o sistema envia de novo automaticamente).
+
+A mesma listagem está disponível via API:
+
+```bash
+curl https://SEU-APP.vercel.app/api/admin/alunos \
+  -H "x-admin-key: SUA-ADMIN_KEY"
+```
+
+Acrescente `?status=approved` ou `?status=pendente` para filtrar pelo status.
+
+### 4.12 Testar o login LOCALMENTE (sem Vercel KV)
 
 O armazenamento cai para **um arquivo JSON local** (`.storage-local.json`,
 gitignorado) quando `KV_REST_API_URL`/`KV_REST_API_TOKEN` não existem. Assim dá
@@ -259,7 +285,7 @@ e-mail" (ou deixe marcado: o código aparece na tela mesmo assim). Em produção
 ├── login.html            ← Login com e-mail + código de acesso
 ├── aluno.html            ← Área exclusiva do aluno
 ├── sucesso.html          ← Página exibida após o checkout do Mercado Pago
-├── admin.html            ← Painel admin (gerar acesso grátis / reenvio)
+├── admin.html            ← Painel admin (gerar acesso / consultar alunos / recuperar códigos)
 ├── styles.css            ← Estilos globais
 ├── script.js             ← JavaScript frontend
 │
@@ -277,7 +303,8 @@ e-mail" (ou deixe marcado: o código aparece na tela mesmo assim). Em produção
 │   ├── cadastro.js       ← POST — cadastra aluno (status pendente)
 │   ├── material.js       ← GET — baixa PDF protegido (requer sessão)
 │   ├── admin/
-│   │   └── gerar-acesso.js ← POST — gera acesso grátis (requer ADMIN_KEY)
+│   │   ├── gerar-acesso.js ← POST — gera acesso grátis (requer ADMIN_KEY)
+│   │   └── alunos.js    ← GET  — lista alunos e códigos (requer ADMIN_KEY)
 │   ├── mercadopago/
 │   │   ├── preference.js ← POST — cria preferência de pagamento
 │   │   ├── webhook.js    ← POST — recebe notificação do Mercado Pago
@@ -342,7 +369,6 @@ git push -u origin main
 
 - [ ] Formatação automática de CPF no frontend (máscara completa com validação de dígitos verificadores)
 - [ ] Página dedicada de "Termos de Uso", "Política de Privacidade" e "Direitos Autorais"
-- [ ] Página de administração para consultar alunos e reenviar tokens
 - [ ] Integração com YouTube Data API para obter thumbnails dos vídeos automaticamente
 - [ ] Cache de assets (PDFs, vídeos) para melhor performance
 - [ ] Testes automatizados (E2E)

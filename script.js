@@ -472,6 +472,10 @@
         return;
       }
 
+      guardarAdminKey(chave);
+      var campoChaveAlunos = $("#campo-admin-key-alunos");
+      if (campoChaveAlunos) campoChaveAlunos.value = chave;
+
       var botao = $("#js-btn-gerar");
       botao.disabled = true;
       botao.textContent = "GERANDO…";
@@ -514,6 +518,252 @@
         mostrarAlerta("Erro de conexão. Tente novamente.", "erro");
         botao.disabled = false;
         botao.textContent = "GERAR ACESSO";
+      }
+    });
+  }
+
+  /* ============================================================
+     PAINEL ADMIN — abas (Gerar acesso / Alunos & códigos)
+     ============================================================ */
+  var ADMIN_KEY_STORAGE = "adminKey900";
+
+  function guardarAdminKey(chave) {
+    if (!chave) return;
+    try {
+      sessionStorage.setItem(ADMIN_KEY_STORAGE, chave);
+    } catch (_e) {}
+  }
+
+  function aplicarAdminKeyLembrada() {
+    var chave = null;
+    try {
+      chave = sessionStorage.getItem(ADMIN_KEY_STORAGE);
+    } catch (_e) {}
+    if (!chave) return;
+    ["#campo-admin-key", "#campo-admin-key-alunos"].forEach(function (sel) {
+      var el = $(sel);
+      if (el && !el.value) el.value = chave;
+    });
+  }
+
+  function initAdminAbas() {
+    var abas = $qsa(".admin-tab");
+    if (!abas.length) return;
+
+    abas.forEach(function (aba) {
+      aba.addEventListener("click", function () {
+        var alvo = aba.getAttribute("data-aba");
+        abas.forEach(function (t) {
+          t.classList.toggle("ativo", t === aba);
+        });
+        $qsa(".admin-painel").forEach(function (painel) {
+          painel.classList.toggle("ativo", painel.id === "painel-" + alvo);
+        });
+      });
+    });
+  }
+
+  /* ============================================================
+     PAINEL ADMIN — listar alunos, consultar/recuperar códigos
+     ============================================================ */
+  function initAdminAlunos() {
+    var btn = $("#js-btn-carregar");
+    if (!btn) return;
+
+    var campoChave = $("#campo-admin-key-alunos");
+    var alerta = $("#js-alerta-alunos");
+    var campoStatus = $("#campo-status-filtro");
+    var campoBusca = $("#campo-busca");
+    var corpoTabela = $("#js-linha-alunos");
+    var resumo = $("#js-resumo-alunos");
+
+    var cache = [];
+
+    function setAlerta(txt, tipo) {
+      alerta.textContent = txt;
+      alerta.className = "alerta " + (tipo === "ok" ? "alerta--ok" : "alerta--erro") + " visivel";
+    }
+
+    function badgeStatus(aluno) {
+      if (aluno.status === "approved") {
+        return '<span class="badge-status badge-status--approved">LIBERADO</span>';
+      }
+      if (aluno.status === "pendente") {
+        return '<span class="badge-status badge-status--pendente">PENDENTE</span>';
+      }
+      return '<span class="badge-status badge-status--outro">' + escapeHtml(aluno.status || "—") + "</span>";
+    }
+
+    async function carregar() {
+      var chave = campoChave.value.trim();
+      if (!chave) {
+        setAlerta("Informe a ADMIN_KEY para carregar os alunos.", "erro");
+        return;
+      }
+      guardarAdminKey(chave);
+      var campoGerar = $("#campo-admin-key");
+      if (campoGerar) campoGerar.value = chave;
+
+      btn.disabled = true;
+      btn.textContent = "CARREGANDO…";
+      corpoTabela.innerHTML = '<tr><td colspan="7" class="carregando">Carregando alunos…</td></tr>';
+
+      try {
+        var r = await api("/api/admin/alunos", {
+          headers: { "Content-Type": "application/json", "x-admin-key": chave },
+        });
+
+        if (!r.ok || !Array.isArray(r.dados.alunos)) {
+          corpoTabela.innerHTML =
+            '<tr><td colspan="7" class="sem-dados">Não foi possível carregar a lista.</td></tr>';
+          setAlerta(r.dados.erro || "Erro na API. Verifique a ADMIN_KEY.", "erro");
+          return;
+        }
+
+        cache = r.dados.alunos;
+        alerta.className = "alerta";
+        renderizar();
+      } catch (err) {
+        console.error("admin/alunos:", err);
+        corpoTabela.innerHTML = '<tr><td colspan="7" class="sem-dados">Erro de conexão.</td></tr>';
+        setAlerta("Erro de conexão. Tente novamente.", "erro");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "CARREGAR ALUNOS";
+      }
+    }
+
+    function copiarCodigo(codigo) {
+      if (!codigo) return;
+      var okCopiar = function () {
+        setAlerta("Código copiado: " + codigo, "ok");
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(codigo).then(okCopiar).catch(function () {
+          setAlerta("Código: " + codigo, "ok");
+        });
+      } else {
+        setAlerta("Código: " + codigo, "ok");
+      }
+    }
+
+    async function reenviarEmail(aluno) {
+      if (!aluno || !aluno.token) return;
+      var chave = campoChave.value.trim();
+      if (!chave) {
+        setAlerta("Informe a ADMIN_KEY para reenviar o e-mail.", "erro");
+        return;
+      }
+
+      try {
+        var r = await api("/api/email/enviar-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-key": chave },
+          body: JSON.stringify({ codigo: aluno.token }),
+        });
+
+        if (r.ok) {
+          aluno.email_enviado = true;
+          renderizar();
+          setAlerta("E-mail reenviado para " + aluno.email + ".", "ok");
+        } else {
+          setAlerta(r.dados.erro || "Falha ao reenviar o e-mail.", "erro");
+        }
+      } catch (err) {
+        console.error("reenviar-token:", err);
+        setAlerta("Erro de conexão ao reenviar o e-mail.", "erro");
+      }
+    }
+
+    function renderizar() {
+      var busca = (campoBusca.value || "").trim().toLowerCase();
+      var statusF = campoStatus.value;
+
+      var linhas = cache.filter(function (a) {
+        if (statusF && a.status !== statusF) return false;
+        if (!busca) return true;
+        return (
+          String(a.nome || "").toLowerCase().indexOf(busca) !== -1 ||
+          String(a.email || "").toLowerCase().indexOf(busca) !== -1
+        );
+      });
+
+      if (resumo) {
+        var rotulo = statusF === "approved" ? "liberados" : statusF === "pendente" ? "pendentes" : "todos";
+        resumo.style.display = "block";
+        resumo.textContent =
+          cache.length + " aluno(s) no total · exibindo " + linhas.length + " (" + rotulo + ")";
+      }
+
+      if (!linhas.length) {
+        corpoTabela.innerHTML =
+          '<tr><td colspan="7" class="sem-dados">Nenhum aluno encontrado.</td></tr>';
+        return;
+      }
+
+      corpoTabela.innerHTML = linhas
+        .map(function (a) {
+          var codigoCell = a.token
+            ? '<span class="codigo-cell">' + escapeHtml(a.token) + "</span>"
+            : '<span class="mutado" style="font-size:0.8rem;">— sem código —</span>';
+
+          var acoes =
+            '<button type="button" class="acao-btn" data-copiar="' +
+            escapeHtml(a.token || "") +
+            '"' +
+            (a.token ? "" : " disabled") +
+            '>Copiar</button> ' +
+            '<button type="button" class="acao-btn acao-btn--enviar" data-reenviar="' +
+            escapeHtml(a.token || "") +
+            '"' +
+            (a.token ? "" : " disabled") +
+            ">" +
+            (a.email_enviado ? "Reenviar e-mail" : "Enviar e-mail") +
+            "</button>";
+
+          return (
+            "<tr>" +
+            '<td><div class="aluno-nome">' + escapeHtml(a.nome) + "</div>" +
+            '<div class="aluno-email">' + escapeHtml(a.email) + "</div>" +
+            (a.whatsapp ? '<div class="aluno-email">📱 ' + escapeHtml(a.whatsapp) + "</div>" : "") +
+            "</td>" +
+            "<td>" + escapeHtml(a.planoNome || a.plano) + "</td>" +
+            "<td>" + badgeStatus(a) + "</td>" +
+            "<td>" + fmtData(a.liberado_em || a.criado_em) + "</td>" +
+            "<td>" + fmtData(a.expira_em) + "</td>" +
+            "<td>" + codigoCell + "</td>" +
+            "<td>" + acoes + "</td>" +
+            "</tr>"
+          );
+        })
+        .join("");
+    }
+
+    btn.addEventListener("click", carregar);
+
+    if (campoBusca) campoBusca.addEventListener("input", renderizar);
+    if (campoStatus) campoStatus.addEventListener("change", renderizar);
+
+    // Delegação de cliques: copiar código / reenviar e-mail.
+    corpoTabela.addEventListener("click", function (e) {
+      var botao = e.target.closest ? e.target.closest("button") : null;
+      if (!botao || botao.disabled) return;
+
+      var codigo = botao.getAttribute("data-copiar") || botao.getAttribute("data-reenviar");
+      if (!codigo) return;
+
+      var aluno = null;
+      for (var i = 0; i < cache.length; i++) {
+        if (cache[i].token === codigo) {
+          aluno = cache[i];
+          break;
+        }
+      }
+
+      if (botao.hasAttribute("data-copiar")) {
+        copiarCodigo(codigo);
+      } else if (botao.hasAttribute("data-reenviar")) {
+        reenviarEmail(aluno);
       }
     });
   }
@@ -932,7 +1182,12 @@
 
     if (pagina === "cadastro.html" || window.location.pathname.indexOf("cadastro") !== -1) initCadastro();
     if (pagina === "login.html" || window.location.pathname.indexOf("login") !== -1) initLogin();
-    if (pagina === "admin.html" || window.location.pathname.indexOf("admin") !== -1) initAdmin();
+    if (pagina === "admin.html" || window.location.pathname.indexOf("admin") !== -1) {
+      aplicarAdminKeyLembrada();
+      initAdmin();
+      initAdminAbas();
+      initAdminAlunos();
+    }
     if (pagina === "aluno.html" || window.location.pathname.indexOf("aluno") !== -1) initAluno();
     if (pagina === "materiais.html" || window.location.pathname.indexOf("materiais") !== -1) initMateriais();
     if (pagina === "sucesso.html" || window.location.pathname.indexOf("sucesso") !== -1) initSucesso();

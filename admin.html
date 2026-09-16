@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel — Gerar acesso (admin)</title>
+  <title>Painel — Administração</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1430'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%234ade80'%3E900%2B%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="styles.css" />
@@ -12,6 +12,7 @@
       min-height: 100vh;
       padding-bottom: 60px;
     }
+
     .aviso {
       background: rgba(251, 191, 36, 0.1);
       border: 1px solid rgba(251, 191, 36, 0.4);
@@ -21,12 +22,14 @@
       font-size: 0.9rem;
       margin-bottom: 20px;
     }
+
     .resultado {
       margin-top: 22px;
       border-top: 1px solid var(--line);
       padding-top: 18px;
       display: none;
     }
+
     .resultado .codigo {
       font-family: monospace;
       font-size: 1.15rem;
@@ -40,6 +43,183 @@
       text-align: center;
       user-select: all;
       margin: 12px 0;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 auto 20px;
+      max-width: 900px;
+    }
+
+    .admin-tab {
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .admin-tab:hover {
+      color: var(--txt);
+      border-color: var(--blue);
+    }
+
+    .admin-tab.ativo {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .admin-painel {
+      display: none;
+    }
+
+    .admin-painel.ativo {
+      display: block;
+    }
+
+    .alerta {
+      margin-top: 16px;
+    }
+
+    .admin-resumo {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 18px 0 10px;
+    }
+
+    .tabela-wrap {
+      overflow-x: auto;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .admin-tabela {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      min-width: 860px;
+    }
+
+    .admin-tabela th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-2);
+      white-space: nowrap;
+    }
+
+    .admin-tabela td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line-soft);
+      vertical-align: top;
+      color: var(--txt);
+    }
+
+    .admin-tabela tr:last-child td {
+      border-bottom: none;
+    }
+
+    .admin-tabela tr:hover td {
+      background: rgba(59, 130, 246, 0.04);
+    }
+
+    .aluno-nome {
+      font-weight: 700;
+      color: var(--txt);
+    }
+
+    .aluno-email {
+      font-size: 0.8rem;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .codigo-cell {
+      font-family: monospace;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--green2);
+      white-space: nowrap;
+      user-select: all;
+    }
+
+    .badge-status {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge-status--approved {
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+
+    .badge-status--pendente {
+      background: rgba(251, 191, 36, 0.12);
+      color: #fde68a;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+    }
+
+    .badge-status--outro {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .acao-btn {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      background: var(--bg-0);
+      color: var(--blue2);
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .acao-btn:hover {
+      border-color: var(--blue);
+    }
+
+    .acao-btn--enviar {
+      color: var(--green2);
+    }
+
+    .acao-btn--enviar:hover {
+      border-color: var(--green);
+    }
+
+    .sem-dados {
+      text-align: center;
+      padding: 28px;
+      color: var(--muted);
+    }
+
+    .carregando {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
     }
   </style>
 </head>
@@ -56,85 +236,169 @@
   <main style="padding-top: 110px; padding-bottom: 40px;">
     <section style="padding: 0;">
       <div class="container">
-        <div class="form-card" style="max-width: 560px;">
-          <div class="sec-cabecalho" style="margin-bottom: 6px;">
-            <span class="badge badge--verde">Somente administrador</span>
-            <h1 style="font-size: 1.6rem; margin-top: 12px;">Gerar acesso grátis</h1>
-            <p class="mutado" style="margin: 0;">
-              Gere um código de acesso manualmente (ex.: para presentear alguém),
-              <strong>sem passar por pagamento</strong>.
-            </p>
+        <div class="sec-cabecalho" style="margin-bottom: 18px; max-width: 900px;">
+          <span class="badge badge--verde">Somente administrador</span>
+          <h1 style="font-size: 1.6rem; margin-top: 12px;">Painel do administrador</h1>
+          <p class="mutado" style="margin: 0;">
+            Gere acessos grátis, consulte todos os alunos e recupere códigos
+            perdidos.
+          </p>
+        </div>
+
+        <div class="admin-tabs" role="tablist">
+          <button type="button" class="admin-tab ativo" data-aba="gerar" role="tab">Gerar acesso</button>
+          <button type="button" class="admin-tab" data-aba="alunos" role="tab">Alunos &amp; códigos</button>
+        </div>
+
+        <div class="admin-painel ativo" id="painel-gerar" role="tabpanel">
+          <div class="form-card" style="max-width: 560px;">
+            <div class="sec-cabecalho" style="margin-bottom: 6px;">
+              <span class="badge badge--verde">Somente administrador</span>
+              <h2 style="font-size: 1.4rem; margin-top: 12px;">Gerar acesso grátis</h2>
+              <p class="mutado" style="margin: 0;">
+                Gere um código de acesso manualmente (ex.: para presentear alguém),
+                <strong>sem passar por pagamento</strong>.
+              </p>
+            </div>
+
+            <div class="aviso">
+              ⚠️ Este painel pula a etapa do Mercado Pago. Use apenas para cortesias.
+              Qualquer pessoa com a sua <strong>ADMIN_KEY</strong> consegue gerar acessos.
+            </div>
+
+            <div class="alerta" id="js-alerta" role="alert"></div>
+
+            <form id="js-form-admin" novalidate>
+              <div class="form-grid">
+                <div class="campo full">
+                  <label for="campo-admin-key">Chave de administrador (ADMIN_KEY) <span class="req">*</span></label>
+                  <input type="password" id="campo-admin-key" placeholder="Sua ADMIN_KEY da Vercel" required autocomplete="off" />
+                </div>
+
+                <div class="campo full">
+                  <label for="campo-nome">Nome completo <span class="req">*</span></label>
+                  <input type="text" id="campo-nome" placeholder="Nome do amigo" required />
+                </div>
+
+                <div class="campo full">
+                  <label for="campo-email">E-mail <span class="req">*</span></label>
+                  <input type="email" id="campo-email" placeholder="emaildoamigo@exemplo.com" required />
+                </div>
+
+                <div class="campo">
+                  <label for="campo-whatsapp">WhatsApp</label>
+                  <input type="tel" id="campo-whatsapp" placeholder="(opcional)" />
+                </div>
+
+                <div class="campo">
+                  <label for="campo-cpf">CPF</label>
+                  <input type="text" id="campo-cpf" placeholder="(opcional)" />
+                </div>
+
+                <div class="campo">
+                  <label for="campo-plano">Plano <span class="req">*</span></label>
+                  <select id="campo-plano">
+                    <option value="basico">Plano Básico</option>
+                    <option value="ultra">Plano Ultra</option>
+                  </select>
+                </div>
+
+                <div class="campo">
+                  <label for="campo-validade">Validade (dias) <span class="req">*</span></label>
+                  <input type="number" id="campo-validade" value="365" min="1" max="3660" required />
+                  <p class="ajuda">Padrão: 365 dias (1 ano).</p>
+                </div>
+
+                <div class="campo full">
+                  <label class="termos-bloco" style="width: 100%; cursor: pointer; display: flex; align-items: flex-start;">
+                    <input type="checkbox" id="campo-enviar-email" checked style="width: auto; margin-top: 4px;" />
+                    <span style="margin-left: 10px;">Enviar o código por e-mail para o amigo agora.</span>
+                  </label>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn--primario btn--bloco" id="js-btn-gerar" style="margin-top: 20px;">
+                GERAR ACESSO
+              </button>
+            </form>
+
+            <div class="resultado" id="js-resultado">
+              <h3 style="margin-bottom: 4px;">Acesso gerado! 🎉</h3>
+              <p class="mutado" style="margin: 0;">Código de acesso do amigo (copie e envie):</p>
+              <div class="codigo" id="js-codigo">—</div>
+              <p class="mutado" style="font-size: 0.85rem; margin: 0;">
+                Plano: <b id="js-result-plano">—</b> · Válido até <b id="js-result-expira">—</b><br />
+                <span id="js-result-email-msg">O código também foi enviado para o e-mail dele(a).</span>
+              </p>
+            </div>
           </div>
+        </div>
 
-          <div class="aviso">
-            ⚠️ Este painel pula a etapa do Mercado Pago. Use apenas para cortesias.
-            Qualquer pessoa com a sua <strong>ADMIN_KEY</strong> consegue gerar acessos.
-          </div>
+        <div class="admin-painel" id="painel-alunos" role="tabpanel">
+          <div class="form-card" style="max-width: 980px;">
+            <div class="sec-cabecalho" style="margin-bottom: 16px;">
+              <span class="badge badge--verde">Somente administrador</span>
+              <h2 style="font-size: 1.4rem; margin-top: 12px;">Alunos &amp; códigos de acesso</h2>
+              <p class="mutado" style="margin: 0;">
+                Veja quem já comprou o curso, consulte o código de cada aluno e,
+                se ele perdeu o código, copie-o novamente ou reenvie por e-mail.
+              </p>
+            </div>
 
-          <div class="alerta" id="js-alerta" role="alert"></div>
+            <div class="aviso">
+              🔐 Esta lista é protegida pela <strong>ADMIN_KEY</strong>. Nunca
+              compartilhe a chave nem a URL desta página.
+            </div>
 
-          <form id="js-form-admin" novalidate>
-            <div class="form-grid">
+            <div class="alerta" id="js-alerta-alunos" role="alert"></div>
+
+            <div class="form-grid" style="margin-top: 18px;">
               <div class="campo full">
-                <label for="campo-admin-key">Chave de administrador (ADMIN_KEY) <span class="req">*</span></label>
-                <input type="password" id="campo-admin-key" placeholder="Sua ADMIN_KEY da Vercel" required />
-              </div>
-
-              <div class="campo full">
-                <label for="campo-nome">Nome completo <span class="req">*</span></label>
-                <input type="text" id="campo-nome" placeholder="Nome do amigo" required />
-              </div>
-
-              <div class="campo full">
-                <label for="campo-email">E-mail <span class="req">*</span></label>
-                <input type="email" id="campo-email" placeholder="emaildoamigo@exemplo.com" required />
+                <label for="campo-admin-key-alunos">Chave de administrador (ADMIN_KEY) <span class="req">*</span></label>
+                <input type="password" id="campo-admin-key-alunos" placeholder="Sua ADMIN_KEY" required autocomplete="off" />
               </div>
 
               <div class="campo">
-                <label for="campo-whatsapp">WhatsApp</label>
-                <input type="tel" id="campo-whatsapp" placeholder="(opcional)" />
-              </div>
-
-              <div class="campo">
-                <label for="campo-cpf">CPF</label>
-                <input type="text" id="campo-cpf" placeholder="(opcional)" />
-              </div>
-
-              <div class="campo">
-                <label for="campo-plano">Plano <span class="req">*</span></label>
-                <select id="campo-plano">
-                  <option value="basico">Plano Básico</option>
-                  <option value="ultra">Plano Ultra</option>
+                <label for="campo-status-filtro">Status</label>
+                <select id="campo-status-filtro">
+                  <option value="">Todos</option>
+                  <option value="approved">Liberados (pagos)</option>
+                  <option value="pendente">Pendentes</option>
                 </select>
               </div>
 
               <div class="campo">
-                <label for="campo-validade">Validade (dias) <span class="req">*</span></label>
-                <input type="number" id="campo-validade" value="365" min="1" max="3660" required />
-                <p class="ajuda">Padrão: 365 dias (1 ano).</p>
-              </div>
-
-              <div class="campo full">
-                <label class="termos-bloco" style="width: 100%; cursor: pointer; display: flex; align-items: flex-start;">
-                  <input type="checkbox" id="campo-enviar-email" checked style="width: auto; margin-top: 4px;" />
-                  <span style="margin-left: 10px;">Enviar o código por e-mail para o amigo agora.</span>
-                </label>
+                <label for="campo-busca">Buscar por nome ou e-mail</label>
+                <input type="search" id="campo-busca" placeholder="Digite para filtrar…" />
               </div>
             </div>
 
-            <button type="submit" class="btn btn--primario btn--bloco" id="js-btn-gerar" style="margin-top: 20px;">
-              GERAR ACESSO
+            <button type="button" class="btn btn--primario btn--bloco" id="js-btn-carregar" style="margin-top: 18px;">
+              CARREGAR ALUNOS
             </button>
-          </form>
 
-          <div class="resultado" id="js-resultado">
-            <h3 style="margin-bottom: 4px;">Acesso gerado! 🎉</h3>
-            <p class="mutado" style="margin: 0;">Código de acesso do amigo (copie e envie):</p>
-            <div class="codigo" id="js-codigo">—</div>
-            <p class="mutado" style="font-size: 0.85rem; margin: 0;">
-              Plano: <b id="js-result-plano">—</b> · Válido até <b id="js-result-expira">—</b><br />
-              <span id="js-result-email-msg">O código também foi enviado para o e-mail dele(a).</span>
-            </p>
+            <div class="admin-resumo" id="js-resumo-alunos" style="display: none;"></div>
+
+            <div class="tabela-wrap">
+              <table class="admin-tabela">
+                <thead>
+                  <tr>
+                    <th>Aluno</th>
+                    <th>Plano</th>
+                    <th>Status</th>
+                    <th>Liberado em</th>
+                    <th>Expira em</th>
+                    <th>Código de acesso</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="js-linha-alunos">
+                  <tr>
+                    <td colspan="7" class="sem-dados">Digite a ADMIN_KEY e clique em "CARREGAR ALUNOS".</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

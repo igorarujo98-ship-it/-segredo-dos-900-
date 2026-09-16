@@ -168,6 +168,29 @@ async function exists(key) {
   return dados && (dados.result === 1 || dados.result === "1");
 }
 
+/**
+ * Lista as chaves que casam com um padrão (ex.: "aluno:*").
+ * Usa a rota /keys/<pattern> do Upstash REST API (equivalente ao KEYS).
+ * No modo local, filtra as chaves do arquivo JSON por prefixo/padrão glob.
+ */
+async function keys(pattern) {
+  if (!temKV()) {
+    return keysLocal(pattern);
+  }
+  const dados = await comando(BASE + "/keys/" + encodeURIComponent(String(pattern || "*")));
+  return (dados && Array.isArray(dados.result) && dados.result) || [];
+}
+
+/** Converte um padrão glob simples ("aluno:*") em RegExp. */
+function regexDePadrao(pattern) {
+  var partes = String(pattern || "*")
+    .split("*")
+    .map(function (p) {
+      return p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    });
+  return new RegExp("^" + partes.join(".*") + "$");
+}
+
 /** Define TTL de uma chave. */
 async function expire(key, ttlSeconds) {
   if (!temKV()) {
@@ -227,6 +250,15 @@ async function existsLocal(key) {
   return validoLocal(carregarLocal()[key]);
 }
 
+async function keysLocal(pattern) {
+  limparExpiradoLocal();
+  const dados = carregarLocal();
+  const re = regexDePadrao(pattern);
+  return Object.keys(dados).filter(function (chave) {
+    return re.test(chave);
+  });
+}
+
 async function expireLocal(key, ttlSeconds) {
   const dados = carregarLocal();
   if (!validoLocal(dados[key])) return false;
@@ -235,4 +267,4 @@ async function expireLocal(key, ttlSeconds) {
   return true;
 }
 
-module.exports = { get, set, setnx, del, exists, expire };
+module.exports = { get, set, setnx, del, exists, expire, keys };

@@ -104,6 +104,23 @@ async function buscarPorToken(token) {
   return buscarAluno(id);
 }
 
+/**
+ * Lista TODOS os alunos cadastrados (pendentes e liberados),
+ * do mais recente para o mais antigo. Usado pelo painel de administração.
+ */
+async function listarAlunos() {
+  const chaves = await storage.keys(PREFIXO_ALUNO + "*");
+  const alunos = [];
+  for (const chave of chaves) {
+    const aluno = await storage.get(chave);
+    if (aluno && aluno.id) alunos.push(aluno);
+  }
+  alunos.sort(function (a, b) {
+    return new Date(b.criado_em || 0).getTime() - new Date(a.criado_em || 0).getTime();
+  });
+  return alunos;
+}
+
 /** Marca o pagamento como aprovado, gera o token (uma única vez) e libera 1 ano. */
 async function registrarPagamentoAprovado(aluno, pagamento) {
   const jaProcessado = !(await storage.setnx(PREFIXO_WEBHOOK + pagamento.id, aluno.id, TTL_WEBHOOK));
@@ -170,6 +187,7 @@ module.exports = {
   buscarAluno,
   buscarPorEmail,
   buscarPorToken,
+  listarAlunos,
   registrarPagamentoAprovado,
   criarSessao,
   buscarAlunoPorSessao,

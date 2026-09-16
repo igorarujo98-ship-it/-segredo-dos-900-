@@ -837,7 +837,7 @@
 
     if (!alunoId) {
       titulo.textContent = "Pagamento em andamento";
-      mensagem.textContent = "Assim que o Mercado Pago confirmar a aprovação, seu acesso será liberado e seu código aparecerá aqui (e irá para seu e-mail).";
+      mensagem.textContent = "Assim que o Mercado Pago confirmar a aprovação, seu acesso será liberado e seu código aparecerá aqui. Salve-o: ele não pode ser perdido.";
       return;
     }
 
@@ -847,8 +847,8 @@
       icone.className = "sucesso-icone ok";
       icone.textContent = "✓";
       titulo.textContent = "Pagamento confirmado! 🎉";
-      mensagem.textContent =
-        "Seu acesso foi liberado. Copie seu código abaixo e use no login.";
+      mensagem.innerHTML =
+        "Seu acesso foi liberado. Copie o código abaixo e <strong>salve-o em um lugar seguro</strong> — ele não pode ser perdido.";
       passos.classList.remove("escondido");
       $qsa("p", passos).forEach(function (p) {
         p.style.display = "flex";
@@ -866,7 +866,7 @@
         '<a class="btn btn--contorno" href="index.html">VOLTAR AO INÍCIO</a>' +
         "</div>";
       rodapeMsg.textContent =
-        "O código também foi enviado para seu e-mail. Ele é individual e intransferível.";
+        "Este código é o seu acesso: é individual, intransferível e não pode ser perdido. Guarde-o.";
     }
 
     function renderAguardando() {

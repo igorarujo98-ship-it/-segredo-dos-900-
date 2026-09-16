@@ -69,9 +69,9 @@
         },
         {
           n: "03",
-          titulo: "Recebe o acesso por e-mail",
+          titulo: "Recebe seu código na tela",
           texto:
-            "Assim que o pagamento for confirmado, seu código de acesso é gerado e enviado automaticamente para o seu e-mail.",
+            "Assim que o pagamento for confirmado, seu código de acesso aparece na tela. Salve esse código: é com ele que você entra e ele não pode ser perdido.",
         },
         {
           n: "04",

@@ -121,6 +121,23 @@ async function listarAlunos() {
   return alunos;
 }
 
+/**
+ * Marca um upgrade pendente no aluno. Quando o pagamento do upgrade for
+ * aprovado, o webhook move o aluno para o plano de destino (ex.: "ultra").
+ */
+async function marcarUpgradePendente(aluno, planoDestino) {
+  aluno.upgrade_pendente = planoDestino;
+  await salvarAluno(aluno);
+}
+
+/** Remove a marcação de upgrade pendente (ex.: quando o pagamento não pôde ser gerado). */
+async function limparUpgradePendente(aluno) {
+  if (aluno && aluno.upgrade_pendente) {
+    delete aluno.upgrade_pendente;
+    await salvarAluno(aluno);
+  }
+}
+
 /** Marca o pagamento como aprovado, gera o token (uma única vez) e libera 1 ano. */
 async function registrarPagamentoAprovado(aluno, pagamento) {
   const jaProcessado = !(await storage.setnx(PREFIXO_WEBHOOK + pagamento.id, aluno.id, TTL_WEBHOOK));
@@ -143,13 +160,24 @@ async function registrarPagamentoAprovado(aluno, pagamento) {
     aluno.expira_em = aluno.expira_em || tokenLib.calcularExpiracao(agora, tokenLib.VALIDADE_DIAS);
   }
 
+  // Upgrade pendente: o pagamento aprovado promove o aluno para o plano de destino.
+  let planoAtualizado = null;
+  if (aluno.upgrade_pendente) {
+    const destino = PLANOS.porId(aluno.upgrade_pendente);
+    if (destino && destino.id !== aluno.plano) {
+      aluno.plano = destino.id;
+      planoAtualizado = destino.id;
+    }
+    delete aluno.upgrade_pendente;
+  }
+
   aluno.pagamento_id = pagamento.id;
   aluno.metodo_pagamento = pagamento.payment_method_id || null;
 
   await salvarAluno(aluno);
   await storage.set(PREFIXO_PAGAMENTO + pagamento.id, aluno.id, TTL_PAGAMENTO);
 
-  return { processado: true, novoToken: novoToken, token: aluno.token };
+  return { processado: true, novoToken: novoToken, token: aluno.token, planoAtualizado: planoAtualizado };
 }
 
 /** Cria uma sessão de login para o aluno. */
@@ -189,6 +217,8 @@ module.exports = {
   buscarPorToken,
   listarAlunos,
   registrarPagamentoAprovado,
+  marcarUpgradePendente,
+  limparUpgradePendente,
   criarSessao,
   buscarAlunoPorSessao,
   dadosPublicos,

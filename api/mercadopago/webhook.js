@@ -93,6 +93,7 @@ module.exports = async function handler(req, res) {
     ok(res, {
       recebido: true,
       processado: resultado.processado,
+      planoAtualizado: resultado.planoAtualizado || null,
       statusPagamento: "approved",
     });
   } catch (e) {

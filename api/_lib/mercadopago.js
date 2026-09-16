@@ -22,13 +22,22 @@ async function criarPreferencia({ plano, aluno }) {
   const urlBase = (process.env.APP_URL || "http://localhost:3000").replace(/\/+$/, "");
   const access = accessToken();
 
+  // O Mercado Pago cobra unit_price como VALOR TOTAL do item (e divide em
+  // parcelas conforme payment_methods.installments). Por isso usamos o
+  // precoTotal do plano, e nunca o valor de uma única parcela.
+  const valorTotal = Number(
+    plano.precoTotal != null
+      ? plano.precoTotal
+      : plano.preco * (plano.parcelas || PLANOS.parcelas || 1)
+  );
+
   const preferencia = {
     items: [
       {
         title: "O Segredo dos 900+ — " + plano.nome,
         description: "Curso de Redação para o ENEM",
         quantity: 1,
-        unit_price: Number(plano.preco),
+        unit_price: valorTotal,
         currency_id: "BRL",
       },
     ],

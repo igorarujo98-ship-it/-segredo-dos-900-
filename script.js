@@ -924,6 +924,15 @@
     if (upgrade) {
       if (!aluno.materialExclusivo) {
         upgrade.classList.remove("escondido");
+
+        var planoUp = PLANOS.porId && PLANOS.porId("upgrade");
+        var precoUp = $("#js-upgrade-preco");
+        if (precoUp && planoUp) {
+          precoUp.textContent =
+            "Upgrade por " + planoUp.parcelas + "x de " + fmtBRL(planoUp.preco) +
+            " sem juros (total " + fmtBRL(planoUp.precoTotal) + ").";
+        }
+
         var btnUp = $("#js-upgrade-btn");
         if (btnUp) {
           btnUp.addEventListener("click", async function (e) {
@@ -936,12 +945,8 @@
             if (pref.ok && pref.dados.url) {
               window.location.href = pref.dados.url;
             } else {
-              var fallback = PLANOS.porId && PLANOS.porId("ultra");
-              if (fallback && fallback.urlPagamento) {
-                window.location.href = fallback.urlPagamento;
-              } else {
-                btnUp.textContent = "FAZER UPGRADE PARA ULTRA";
-              }
+              // Sem link de fallback para o valor do upgrade (evita preço errado).
+              btnUp.textContent = "FAZER UPGRADE PARA ULTRA (" + (pref.dados.erro || "tente novamente") + ")";
             }
           });
         }

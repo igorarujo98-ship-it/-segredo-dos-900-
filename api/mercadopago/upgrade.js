@@ -19,15 +19,22 @@ module.exports = async function handler(req, res) {
     if (!aluno) return erro(res, 401, "Sessão inválida ou expirada. Faça login novamente.");
     if (aluno.status !== "approved") return erro(res, 403, "Seu acesso ainda não foi liberado.");
 
-    const plano = PLANOS.porId("ultra");
-    if (!plano) return erro(res, 400, "Plano Ultra indisponível no momento.");
+    const plano = PLANOS.porId("upgrade");
+    if (!plano) return erro(res, 400, "Upgrade indisponível no momento.");
+
+    // Marca o upgrade: quando o webhook confirmar o pagamento, o aluno
+    // é promovido para o plano de destino (ultra).
+    await alunos.marcarUpgradePendente(aluno, plano.planoDestino || "ultra");
 
     try {
       const preferencia = await mp.criarPreferencia({ plano, aluno });
       ok(res, { url: preferencia.url, usandoFallback: false });
     } catch (e) {
       console.error("upgrade:", e);
-      ok(res, { url: plano.urlPagamento, usandoFallback: true });
+      // Não existe link estático confiável para o valor do upgrade (R$ 83,94):
+      // melhor avisar a falha do que mandar o aluno para um checkout com preço errado.
+      await alunos.limparUpgradePendente(aluno);
+      erro(res, 502, "Não foi possível gerar o pagamento do upgrade. Tente novamente.");
     }
   } catch (e) {
     console.error("upgrade:", e);

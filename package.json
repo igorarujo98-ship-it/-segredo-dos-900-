@@ -8,6 +8,7 @@
     "node": "24.x"
   },
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "node scripts/dev-server.js",
+    "gerar-acesso": "node scripts/gerar-acesso.js"
   }
 }

@@ -5,6 +5,9 @@ node_modules
 *.log
 .DS_Store
 
+# Armazenamento local de testes (fallback enquanto não há Vercel KV).
+.storage-local.json
+
 # Cópias locais de referência — NÃO incluir no deploy.
 # Os PDFs protegidos ficam em api/_arquivos/ (servidos apenas pela API com login).
 /aulas/

@@ -222,6 +222,32 @@ chegou, o código também aparece na tela do painel para você copiar e enviar.
 >   -d '{"nome":"João Silva","email":"joao@email.com","plano":"basico","diasValidade":365}'
 > ```
 
+### 4.11 Testar o login LOCALMENTE (sem Vercel KV)
+
+O armazenamento cai para **um arquivo JSON local** (`.storage-local.json`,
+gitignorado) quando `KV_REST_API_URL`/`KV_REST_API_TOKEN` não existem. Assim dá
+para testar cadastro, login, painel admin e download de PDFs em `vercel dev`
+sem criar um Storage KV:
+
+```bash
+# 1) Gere um código de acesso de teste (sem precisar do servidor):
+node scripts/gerar-acesso.js "João Silva" joao@email.com basico
+# Ou com plano Ultra e validade própria:
+node scripts/gerar-acesso.js "Maria" maria@email.com ultra 365
+
+# 2) Rode o servidor local:
+npm run dev   # serve as páginas e a API localmente
+
+# 3) Entre em http://localhost:3000/login.html com o e-mail + o código gerado.
+```
+
+O script imprime o código `900PLUS-XXXX-XXXX` e o salva no armazenamento local.
+Você também pode gerar pelo **admin.html** (`http://localhost:3000/admin.html`),
+digitando a `ADMIN_KEY` do seu `.env.local` (ex.: `900plus-admin-local-7f3k`) —
+enquanto a `RESEND_API_KEY` não estiver configurada, desmarque "Enviar por
+e-mail" (ou deixe marcado: o código aparece na tela mesmo assim). Em produção
+(na Vercel, com KV vinculado), tudo continua usando o Vercel KV normalmente.
+
 ---
 
 ## 5. Estrutura de diretórios
@@ -236,6 +262,11 @@ chegou, o código também aparece na tela do painel para você copiar e enviar.
 ├── admin.html            ← Painel admin (gerar acesso grátis / reenvio)
 ├── styles.css            ← Estilos globais
 ├── script.js             ← JavaScript frontend
+│
+├── scripts/
+│   ├── dev-server.js     ← servidor local (npm run dev)
+│   ├── gerar-acesso.js   ← gera código de acesso de teste rápido
+│   └── merge-pdfs.js     ← junta vários PDFs em um só (ex.: 10 temas)
 │
 ├── config/
 │   ├── planos.js         ← Preços, parcelas e links de pagamento
@@ -267,10 +298,9 @@ chegou, o código também aparece na tela do painel para você copiar e enviar.
 │   │   └── http.js       ← Helpers para funções serverless
 │   └── _arquivos/        ← PDFs protegidos (não acessíveis diretamente pelo navegador)
 │       ├── aulas/
-│       │   ├── aula1.pdf ... aula5.pdf
-│       │   └── aula6.pdf ← adicione quando disponível
+│       │   └── aula1.pdf ... aula6.pdf
 │       └── materiais/
-│           └── temas-modelos.pdf ← adicione quando disponível
+│           └── temas-modelos.pdf ← 10 temas mesclados em um só PDF
 │
 ├── aulas/                ← Cópias locais dos PDFs originais (para referência)
 ├── materiais/            ← Cópia local do temas-modelos.pdf (para referência)

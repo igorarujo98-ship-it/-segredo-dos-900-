@@ -54,15 +54,25 @@ module.exports = async function handler(req, res) {
       diasValidade,
     });
 
+    let emailEnviado = false;
+    let emailErro = null;
     if (enviarEmail) {
-      await mailer.enviarToken({
-        email: aluno.email,
-        nome: aluno.nome,
-        planoNome: plano.nome,
-        codigo: aluno.token,
-        expiraEm: aluno.expira_em,
-      });
-      aluno.email_enviado = true;
+      try {
+        await mailer.enviarToken({
+          email: aluno.email,
+          nome: aluno.nome,
+          planoNome: plano.nome,
+          codigo: aluno.token,
+          expiraEm: aluno.expira_em,
+        });
+        emailEnviado = true;
+      } catch (eEmail) {
+        // E-mail não enviado (ex.: RESEND_API_KEY ausente) — o código continua
+        // sendo gerado e exibido na tela para copiar e enviar manualmente.
+        console.error("gerar-acesso: falha no e-mail:", eEmail);
+        emailErro = "O e-mail não foi enviado. Copie o código acima e envie manualmente.";
+      }
+      aluno.email_enviado = emailEnviado;
       await alunos.salvarAluno(aluno);
     }
 
@@ -72,7 +82,8 @@ module.exports = async function handler(req, res) {
       plano: plano.id,
       liberadoEm: aluno.liberado_em,
       expiraEm: aluno.expira_em,
-      emailEnviado: enviarEmail,
+      emailEnviado: emailEnviado,
+      emailErro: emailErro,
     });
   } catch (e) {
     console.error("gerar-acesso:", e);

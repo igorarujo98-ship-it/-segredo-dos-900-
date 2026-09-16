@@ -36,7 +36,7 @@
           "As 5 competências (200 pontos cada)",
           "Roteiro dos 5 pilares do texto",
         ],
-        videoId: "TROQUE_AQUI_ID_DO_VIDEO_1",
+        videoId: "NoLj0YSuTDg",
         pdf: "aula1.pdf",
       },
       {
@@ -53,7 +53,7 @@
           "Conclusão — os 3 movimentos",
           "Template pronto da redação",
         ],
-        videoId: "TROQUE_AQUI_ID_DO_VIDEO_2",
+        videoId: "U4qc9SuYHDU",
         pdf: "aula2.pdf",
       },
       {
@@ -70,7 +70,7 @@
           "Apontar os 2 causadores",
           "Frase de finalização",
         ],
-        videoId: "TROQUE_AQUI_ID_DO_VIDEO_3",
+        videoId: "oYnK7f-t7tI",
         pdf: "aula3.pdf",
       },
       {
@@ -87,7 +87,7 @@
           "Opinião cidadã",
           "Conectivos que caíram em desuso",
         ],
-        videoId: "TROQUE_AQUI_ID_DO_VIDEO_4",
+        videoId: "Uxt9HJchFxk",
         pdf: "aula4.pdf",
       },
       {
@@ -104,7 +104,7 @@
           "Frase de finalização",
           "Ciclo completo do texto",
         ],
-        videoId: "TROQUE_AQUI_ID_DO_VIDEO_5",
+        videoId: "GZLunWVPP44",
         pdf: "aula5.pdf",
       },
       {
@@ -121,8 +121,8 @@
           "Fechando com a intervenção",
           "Revisão final nota máxima",
         ],
-        videoId: "TROQUE_AQUI_ID_DO_VIDEO_6",
-        pdf: null, // PDF da Aula 6 (breve) — adicione em api/_arquivos/aulas/aula6.pdf
+        videoId: "pAkM6jHxqY8",
+        pdf: "aula6.pdf", // arquivo em api/_arquivos/aulas/aula6.pdf
       },
     ],
 

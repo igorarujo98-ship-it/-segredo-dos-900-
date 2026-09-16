@@ -499,7 +499,7 @@
         $("#js-result-expira").textContent = fmtData(r.dados.expiraEm);
         $("#js-result-email-msg").textContent = r.dados.emailEnviado
           ? "O código também foi enviado para o e-mail dele(a)."
-          : "O e-mail não foi enviado (opção desmarcada). Copie o código acima.";
+          : (r.dados.emailErro || "O e-mail não foi enviado (opção desmarcada). Copie o código acima.");
 
         $("#js-resultado").style.display = "block";
         esconderAlerta();
@@ -684,9 +684,10 @@
       }
     }
 
-    // Material exclusivo (Plano Ultra)
+    // Material exclusivo (Plano Ultra) — só aparece se o PDF já foi enviado.
     var mat = $("#js-material-ultra");
-    if (mat && aluno.materialExclusivo) {
+    var temMaterial = AULAS.materialExclusivo && AULAS.materialExclusivo.pdf;
+    if (mat && aluno.materialExclusivo && temMaterial) {
       mat.classList.remove("escondido");
       $("#js-material-baixar").setAttribute(
         "href",

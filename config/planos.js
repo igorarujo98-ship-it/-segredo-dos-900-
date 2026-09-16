@@ -28,9 +28,20 @@
       incluimaterialExclusivo: true, // acesso ao "10 temas com modelo nota mil"
     },
 
+    // Plano TEMPORÁRIO de teste: R$ 1 para validar o fluxo de pagamento.
+    // Remova esta entrada (e da lista abaixo) quando for divulgar o site.
+    teste: {
+      id: "teste",
+      nome: "Plano Ultra — Teste R$ 1",
+      preco: 1.0,
+      parcelas: 1,
+      urlPagamento: "https://mpago.li/1pvtrRC", // link Mercado Pago (fallback)
+      incluimaterialExclusivo: true, // opção "ultra"
+    },
+
     /** Lista de planos na ordem de exibição. */
     lista: function () {
-      return [this.basicas, this.ultra];
+      return [this.basicas, this.ultra, this.teste];
     },
 
     /** Retorna um plano pelo id (basico | ultra). */

@@ -302,14 +302,14 @@
           '<article class="plano-card' + destaque + ' entrada">' +
           selo +
           '<h3 class="plano-nome">' + escapeHtml(plano.nome) + "</h3>" +
-          '<div class="plano-parcela">6x de ' + fmtBRL(plano.preco) +
+          '<div class="plano-parcela">' + plano.parcelas + "x de " + fmtBRL(plano.preco) +
           " <small>sem juros</small></div>" +
-          '<div style="margin: 10px 0;"><span class="badge badge--verde">Até 6x sem juros</span></div>' +
-          '<p class="plano-vezes">Parcele em até 6x pelo Mercado Pago.</p>' +
+          '<div style="margin: 10px 0;"><span class="badge badge--verde">Até ' + plano.parcelas + "x sem juros</span></div>" +
+          '<p class="plano-vezes">Parcele em até ' + plano.parcelas + 'x pelo Mercado Pago.</p>' +
           '<ul class="plano-lista">' + lista + "</ul>" +
           '<a class="btn ' + (ultra ? "btn--primario" : "btn--azul") + ' btn--bloco" href="cadastro.html?plano=' +
           plano.id + '">ASSINAR ' + escapeHtml(plano.nome.toUpperCase()) + "</a>" +
-          '<p class="plano-note">Pague em até 6x sem juros pelo Mercado Pago.</p>' +
+          '<p class="plano-note">Pague em até ' + plano.parcelas + 'x sem juros pelo Mercado Pago.</p>' +
           "</article>"
         );
       })
@@ -340,7 +340,11 @@
     if (!form) return;
 
     var params = new URLSearchParams(window.location.search);
-    var planoId = params.get("plano") === "ultra" ? "ultra" : "basico";
+    var planoId = "basico";
+    if (PLANOS.porId) {
+      var planoParam = params.get("plano");
+      if (PLANOS.porId(planoParam)) planoId = planoParam;
+    }
     var plano = PLANOS.porId ? PLANOS.porId(planoId) : null;
 
     var resumo = $("#js-resumo-plano");

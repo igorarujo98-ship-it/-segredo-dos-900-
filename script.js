@@ -198,16 +198,23 @@
       '<div class="destaque">' + escapeHtml(info.destaque) + "</div>";
 
     (info.areas || []).forEach(function (area) {
-      var ativa = area.ativa ? " ativa" : "";
-      var percent = ativa
-        ? '<span class="percent">' + (info.redacaoPorcentagem || 20) + "%</span>"
-        : '<span class="percent">&nbsp;</span>';
-      html +=
-        '<div class="barra-area' + ativa + '">' +
-        "<div>" + escapeHtml(area.nome) + "</div>" +
-        '<div class="pit"><i></i></div>' +
-        percent +
-        "</div>";
+      if (area.ativa) {
+        html +=
+          '<div class="barra-area ativa">' +
+          '<div class="area-destaque">' +
+          '<span class="area-nome">' + escapeHtml(area.nome) + "</span>" +
+          '<span class="percent">' + (info.redacaoPorcentagem || 20) + "%</span>" +
+          "</div>" +
+          '<div class="pit"><i></i></div>' +
+          "</div>";
+      } else {
+        html +=
+          '<div class="barra-area">' +
+          "<div>" + escapeHtml(area.nome) + "</div>" +
+          '<div class="pit"><i></i></div>' +
+          '<span class="percent">&nbsp;</span>' +
+          "</div>";
+      }
     });
 
     var passos = "";
@@ -303,13 +310,13 @@
           selo +
           '<h3 class="plano-nome">' + escapeHtml(plano.nome) + "</h3>" +
           '<div class="plano-parcela">' + plano.parcelas + "x de " + fmtBRL(plano.preco) +
-          " <small>sem juros</small></div>" +
-          '<div style="margin: 10px 0;"><span class="badge badge--verde">Até ' + plano.parcelas + "x sem juros</span></div>" +
+          "</div>" +
+          '<div style="margin: 10px 0;"><span class="badge badge--verde">Até ' + plano.parcelas + "x</span></div>" +
           '<p class="plano-vezes">Parcele em até ' + plano.parcelas + 'x pelo Mercado Pago.</p>' +
           '<ul class="plano-lista">' + lista + "</ul>" +
           '<a class="btn ' + (ultra ? "btn--primario" : "btn--azul") + ' btn--bloco" href="cadastro.html?plano=' +
           plano.id + '">ASSINAR ' + escapeHtml(plano.nome.toUpperCase()) + "</a>" +
-          '<p class="plano-note">Pague em até ' + plano.parcelas + 'x sem juros pelo Mercado Pago.</p>' +
+          '<p class="plano-note">Pague em até ' + plano.parcelas + 'x pelo Mercado Pago.</p>' +
           "</article>"
         );
       })
@@ -351,7 +358,7 @@
     if (resumo && plano) {
       resumo.style.display = "flex";
       $("#js-plano-nome").textContent = plano.nome;
-      $("#js-plano-preco").textContent = "6x de " + fmtBRL(plano.preco) + " sem juros";
+      $("#js-plano-preco").textContent = "6x de " + fmtBRL(plano.preco);
     }
 
     // Máscaras leves
@@ -930,7 +937,7 @@
         if (precoUp && planoUp) {
           precoUp.textContent =
             "Upgrade por " + planoUp.parcelas + "x de " + fmtBRL(planoUp.preco) +
-            " sem juros (total " + fmtBRL(planoUp.precoTotal) + ").";
+            " (ou " + fmtBRL(planoUp.precoTotal) + " à vista).";
         }
 
         var btnUp = $("#js-upgrade-btn");

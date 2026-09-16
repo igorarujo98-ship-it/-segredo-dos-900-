@@ -432,6 +432,18 @@ section {
   margin: 6px 0;
 }
 
+.barra-area.ativa .area-destaque {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  justify-self: start;
+  padding: 6px 16px;
+  border: 2px solid var(--green2);
+  border-radius: var(--radius-sm);
+  background: rgba(74, 222, 128, 0.08);
+  box-shadow: 0 0 18px rgba(74, 222, 128, 0.25);
+}
+
 .barra-area.ativa i {
   width: 20%;
   height: 16px;

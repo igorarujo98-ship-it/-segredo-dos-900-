@@ -16,7 +16,7 @@ function accessToken() {
 /**
  * Cria a preferência de pagamento (Checkout Pro) associando o aluno.
  * Assim o webhook consegue vincular Pagamento -> Aluno -> Plano -> Token.
- * O pagamento fica em até 6x sem juros e SEM PIX (somente cartão).
+ * O pagamento fica em até 6x e SEM PIX (somente cartão).
  */
 async function criarPreferencia({ plano, aluno }) {
   const urlBase = (process.env.APP_URL || "http://localhost:3000").replace(/\/+$/, "");

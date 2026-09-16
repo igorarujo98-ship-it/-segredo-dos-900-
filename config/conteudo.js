@@ -64,7 +64,7 @@
           n: "02",
           titulo: "Paga pelo Mercado Pago",
           texto:
-            "É direcionado ao checkout seguro do Mercado Pago — em até 6x sem juros.",
+            "É direcionado ao checkout seguro do Mercado Pago — em até 6x.",
         },
         {
           n: "03",

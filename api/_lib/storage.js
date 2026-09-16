@@ -22,8 +22,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const BASE = process.env.KV_REST_API_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN;
+const BASE = process.env.SEGREDODOS900_KV_REST_API_URL || process.env.KV_REST_API_URL;
+const TOKEN = process.env.SEGREDODOS900_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN;
 
 // ---------------------------------------------------------------------------
 // Armazenamento local (fallback para desenvolvimento)

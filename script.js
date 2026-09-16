@@ -936,8 +936,7 @@
         var precoUp = $("#js-upgrade-preco");
         if (precoUp && planoUp) {
           precoUp.textContent =
-            "Upgrade por " + planoUp.parcelas + "x de " + fmtBRL(planoUp.preco) +
-            " (ou " + fmtBRL(planoUp.precoTotal) + " à vista).";
+            "Upgrade por " + planoUp.parcelas + "x de " + fmtBRL(planoUp.preco) + ".";
         }
 
         var btnUp = $("#js-upgrade-btn");

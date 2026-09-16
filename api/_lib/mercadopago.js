@@ -59,7 +59,7 @@ async function criarPreferencia({ plano, aluno }) {
     },
   };
 
-  // PIX habilitado: paga o valor cheio à vista (sem parcelamento).
+  // PIX habilitado: paga o valor à vista (1x, sem parcelamento).
   return gravarPreferencia(preferencia, access);
 }
 

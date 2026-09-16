@@ -16,7 +16,20 @@
       titulo: "10 temas de redação com modelo nota mil pronto",
       resumo:
         "Material exclusivo do Plano Ultra: 10 temas selecionados com redações-modelo prontas para você usar como referência.",
-      pdf: "temas-modelos.pdf", // arquivo em api/_arquivos/materiais/
+      pdf: "temas-modelos.pdf", // arquivo em api/_arquivos/materiais/ (todos juntos)
+      // Cada tema também pode ser baixado separadamente (arquivos temaN.pdf).
+      temas: [
+        { id: "tema1", numero: 1, titulo: "Tema 1 — O impacto do descarte irregular de lixo no Brasil", pdf: "tema1.pdf" },
+        { id: "tema2", numero: 2, titulo: "Tema 2", pdf: "tema2.pdf" },
+        { id: "tema3", numero: 3, titulo: "Tema 3", pdf: "tema3.pdf" },
+        { id: "tema4", numero: 4, titulo: "Tema 4", pdf: "tema4.pdf" },
+        { id: "tema5", numero: 5, titulo: "Tema 5", pdf: "tema5.pdf" },
+        { id: "tema6", numero: 6, titulo: "Tema 6", pdf: "tema6.pdf" },
+        { id: "tema7", numero: 7, titulo: "Tema 7", pdf: "tema7.pdf" },
+        { id: "tema8", numero: 8, titulo: "Tema 8", pdf: "tema8.pdf" },
+        { id: "tema9", numero: 9, titulo: "Tema 9", pdf: "tema9.pdf" },
+        { id: "tema10", numero: 10, titulo: "Tema 10", pdf: "tema10.pdf" },
+      ],
     },
 
     /** Nível de plano mínimo para acessar cada aula (basico ou ultra). */

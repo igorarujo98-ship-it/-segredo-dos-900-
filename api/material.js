@@ -1,6 +1,7 @@
 ﻿/**
  * GET /api/material?aula=aula1&sessao=...   ou
- * GET /api/material?material=exclusivo&sessao=...
+ * GET /api/material?material=exclusivo&sessao=...   (todos os temas juntos)
+ * GET /api/material?material=tema1&sessao=...       (um tema individual)
  *
  * Entrega os PDFs das aulas e do material exclusivo SOMENTE para alunos
  * logados (sessão válida) com o plano permitido. Os arquivos ficam em
@@ -68,6 +69,23 @@ module.exports = async function handler(req, res) {
       arquivo = mat.pdf;
       subdir = "materiais";
       nomeExibicao = mat.pdf;
+    } else if (tipoMaterial && tipoMaterial.indexOf("tema") === 0) {
+      const plano = PLANOS.porId(aluno.plano) || {};
+      if (!plano.incluimaterialExclusivo) {
+        return erro(
+          res,
+          403,
+          "Este material é exclusivo do Plano Ultra. Faça upgrade para ter acesso."
+        );
+      }
+      const temas = (AULAS.materialExclusivo || {}).temas || [];
+      const t = temas.filter(function (x) {
+        return x.id === tipoMaterial;
+      })[0];
+      if (!t) return erro(res, 404, "Tema não encontrado.");
+      arquivo = t.pdf;
+      subdir = "materiais";
+      nomeExibicao = "tema " + t.numero + " - modelos.pdf";
     } else {
       return erro(res, 400, "Informe a aula ou o material desejado.");
     }

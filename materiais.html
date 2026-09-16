@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Materiais — O Segredo dos 900+</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b1430'/%3E%3Ctext x='50' y='68' font-size='52' font-weight='900' text-anchor='middle' fill='%234ade80'%3E900%2B%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="aluno-tela">
+    <header class="aluno-topo">
+      <div class="container">
+        <a href="aluno.html" class="logo">O SEGREDO DOS <span class="plus">900+</span></a>
+        <div class="perfil">
+          <a class="btn btn--contorno" href="aluno.html" style="padding: 9px 16px; font-size: 0.82rem;">Voltar às aulas</a>
+          <button class="btn btn--contorno" id="js-sair" type="button" style="padding: 9px 16px; font-size: 0.82rem;">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="aluno-corpo">
+      <div class="container">
+        <div class="saudacao">
+          <h1>Seus materiais exclusivos</h1>
+          <p class="mutado">10 temas de redação com modelo nota mil — baixe cada tema separadamente ou todos juntos.</p>
+        </div>
+
+        <div class="materiais-cabecalho">
+          <div>
+            <h2>Os 10 temas</h2>
+            <p>Cada bloco abaixo é um PDF único. Clique para baixar e estudar onde quiser.</p>
+          </div>
+          <a class="btn btn--azul" id="js-materiais-baixar-tudo" href="#" target="_blank" rel="noopener">BAIXAR TUDO EM UM SÓ PDF</a>
+        </div>
+
+        <div class="escondido" id="js-materiais-sem-acesso">
+          <div class="material-aluno">
+            <div class="info">
+              <h3>Material exclusivo do Plano Ultra</h3>
+              <p>Este material não faz parte do seu plano atual. Faça o upgrade para ter acesso aos 10 temas.</p>
+            </div>
+            <a class="btn btn--primario" id="js-upgrade-link" href="aluno.html">FAZER UPGRADE PARA ULTRA</a>
+          </div>
+        </div>
+
+        <div class="temas-lista escondido" id="js-temas-lista"></div>
+        <p class="mutado" id="js-materiais-loading">Carregando seus materiais…</p>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      <div class="container">
+        <div class="rodape-copy">
+          <span>© <span id="ano"></span> O Segredo dos 900+ · Todos os direitos reservados.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="config/planos.js"></script>
+  <script src="config/aulas.js"></script>
+  <script src="config/conteudo.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -15,3 +15,5 @@ node_modules
 
 # Imagens removidas do site (foto do professor já não é usada).
 imagens/
+.vercel
+.env*

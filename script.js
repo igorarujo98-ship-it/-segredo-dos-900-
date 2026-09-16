@@ -693,13 +693,16 @@
     var temMaterial = AULAS.materialExclusivo && AULAS.materialExclusivo.pdf;
     if (mat && aluno.materialExclusivo && temMaterial) {
       mat.classList.remove("escondido");
-      $("#js-material-baixar").setAttribute(
-        "href",
-        "/api/material?material=exclusivo&sessao=" + encodeURIComponent(sessao)
-      );
+      var btnMat = $("#js-material-baixar");
+      btnMat.setAttribute("href", "materiais.html");
+      btnMat.setAttribute("target", "_blank");
+      btnMat.setAttribute("rel", "noopener");
     }
 
-    // Sair
+    ligarSair();
+  }
+
+  function ligarSair() {
     var sair = $("#js-sair");
     if (sair) {
       sair.addEventListener("click", function () {
@@ -709,6 +712,80 @@
         window.location.href = "login.html";
       });
     }
+  }
+
+  /* ============================================================
+     PÁGINA DE MATERIAIS (10 temas — Plano Ultra)
+     ============================================================ */
+  function initMateriais() {
+    var sessao;
+    try {
+      sessao = sessionStorage.getItem(SESSAO_KEY);
+    } catch (_e) {}
+
+    if (!sessao) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    ligarSair();
+
+    fetch("/api/auth/me", { headers: { "x-sessao": sessao } })
+      .then(function (res) {
+        return res.json().then(function (d) {
+          return { status: res.status, d: d };
+        });
+      })
+      .then(function (r) {
+        if (r.status !== 200) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        var aluno = r.d.aluno || {};
+        var lista = $("#js-temas-lista");
+        var semAcesso = $("#js-materiais-sem-acesso");
+        var loading = $("#js-materiais-loading");
+
+        if (loading) loading.classList.add("escondido");
+
+        if (!aluno.materialExclusivo) {
+          if (semAcesso) semAcesso.classList.remove("escondido");
+          return;
+        }
+
+        var temas = (AULAS.materialExclusivo && AULAS.materialExclusivo.temas) || [];
+        if (lista) {
+          lista.innerHTML = temas
+            .map(function (t) {
+              return (
+                '<article class="tema-item">' +
+                '<div class="tema-num">' + t.numero + "</div>" +
+                '<div class="tema-info">' +
+                "<h3>" + escapeHtml(t.titulo) + "</h3>" +
+                "<p>Tema + redação-modelo nota mil · PDF para download.</p>" +
+                "</div>" +
+                '<a class="btn btn--primario" target="_blank" rel="noopener" href="/api/material?material=' +
+                t.id + "&sessao=" + encodeURIComponent(sessao) + '">BAIXAR PDF</a>' +
+                "</article>"
+              );
+            })
+            .join("");
+          lista.classList.remove("escondido");
+        }
+
+        var tudo = $("#js-materiais-baixar-tudo");
+        if (tudo) {
+          tudo.setAttribute(
+            "href",
+            "/api/material?material=exclusivo&sessao=" + encodeURIComponent(sessao)
+          );
+        }
+      })
+      .catch(function (err) {
+        console.error("materiais:", err);
+        window.location.href = "login.html";
+      });
   }
 
   /* ============================================================
@@ -829,6 +906,7 @@
     if (pagina === "login.html" || window.location.pathname.indexOf("login") !== -1) initLogin();
     if (pagina === "admin.html" || window.location.pathname.indexOf("admin") !== -1) initAdmin();
     if (pagina === "aluno.html" || window.location.pathname.indexOf("aluno") !== -1) initAluno();
+    if (pagina === "materiais.html" || window.location.pathname.indexOf("materiais") !== -1) initMateriais();
     if (pagina === "sucesso.html" || window.location.pathname.indexOf("sucesso") !== -1) initSucesso();
   });
 })();

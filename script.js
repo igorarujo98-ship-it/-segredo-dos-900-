@@ -828,9 +828,11 @@
     if (!titulo) return;
 
     var params = new URLSearchParams(window.location.search);
-    var alunoId = params.get("aluno");
+    // O Mercado Pago volta para esta página com "external_reference" (o id do aluno).
+    var alunoId = params.get("aluno") || params.get("external_reference");
     try {
       if (!alunoId) alunoId = sessionStorage.getItem(ALUNO_KEY);
+      if (alunoId) sessionStorage.setItem(ALUNO_KEY, alunoId);
     } catch (_e) {}
 
     if (!alunoId) {

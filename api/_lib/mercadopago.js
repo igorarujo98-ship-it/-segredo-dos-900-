@@ -39,9 +39,9 @@ async function criarPreferencia({ plano, aluno }) {
     external_reference: aluno.id, // usado para vincular pagamento -> aluno
     notification_url: urlBase + "/api/mercadopago/webhook",
     back_urls: {
-      success: urlBase + "/sucesso.html",
-      pending: urlBase + "/sucesso.html",
-      failure: urlBase + "/sucesso.html",
+      success: urlBase + "/sucesso.html?aluno=" + encodeURIComponent(aluno.id),
+      pending: urlBase + "/sucesso.html?aluno=" + encodeURIComponent(aluno.id),
+      failure: urlBase + "/sucesso.html?aluno=" + encodeURIComponent(aluno.id),
     },
     auto_return: "approved",
     statement_descriptor: "SEGREDO DOS 900+",

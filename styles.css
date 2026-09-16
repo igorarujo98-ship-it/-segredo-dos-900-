@@ -350,26 +350,16 @@ section {
   box-shadow: 0 0 10px rgba(74, 222, 128, 0.9);
 }
 
-.hero-flex {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(20px, 5vw, 64px);
-  width: 100%;
-}
-
 .hero-foto {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
+  margin: 4px auto 2px;
 }
 
 .hero-foto img {
   display: block;
-  width: clamp(200px, 32vw, 360px);
+  width: clamp(180px, 27vw, 300px);
   height: auto;
   max-width: 100%;
+  margin: 0 auto;
 }
 
 @media (max-width: 860px) {

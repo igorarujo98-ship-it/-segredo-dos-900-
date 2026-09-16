@@ -521,6 +521,16 @@
   /* ============================================================
      PÁGINA DE LOGIN
      ============================================================ */
+  function destinoAposLogin() {
+    var next = null;
+    try {
+      next = new URLSearchParams(window.location.search).get("next");
+    } catch (_e) {}
+    // Aceita apenas nomes de página locais (evita redirecionamento externo).
+    if (next && /^[a-z0-9_\-]+\.html$/i.test(next)) return next;
+    return "aluno.html";
+  }
+
   function initLogin() {
     var form = $("#js-form-login");
     if (!form) return;
@@ -558,7 +568,7 @@
           sessionStorage.setItem(SESSAO_KEY, r.dados.sessao);
         } catch (_e) {}
 
-        window.location.href = "aluno.html";
+        window.location.href = destinoAposLogin();
       } catch (err) {
         console.error(err);
         mostrarAlerta("Erro de conexão. Tente novamente.", "erro");
@@ -593,7 +603,7 @@
     } catch (_e) {}
 
     if (!sessao) {
-      window.location.href = "login.html";
+      window.location.href = "login.html?next=aluno.html";
       return;
     }
 
@@ -606,14 +616,14 @@
       .then(function (r) {
         if (r.status !== 200) {
           console.warn("me:", r.d);
-          window.location.href = "login.html";
+          window.location.href = "login.html?next=aluno.html";
           return;
         }
         montarAluno(r.d.aluno, sessao);
       })
       .catch(function (err) {
         console.error("me:", err);
-        window.location.href = "login.html";
+        window.location.href = "login.html?next=aluno.html";
       });
   }
 
@@ -694,7 +704,7 @@
     if (mat && aluno.materialExclusivo && temMaterial) {
       mat.classList.remove("escondido");
       var btnMat = $("#js-material-baixar");
-      btnMat.setAttribute("href", "materiais.html");
+      btnMat.setAttribute("href", "materiais.html#s=" + encodeURIComponent(sessao));
       btnMat.setAttribute("target", "_blank");
       btnMat.setAttribute("rel", "noopener");
     }
@@ -723,8 +733,24 @@
       sessao = sessionStorage.getItem(SESSAO_KEY);
     } catch (_e) {}
 
+    // Abriu em nova aba: a sessão pode vir no fragmento da URL (#s=...).
     if (!sessao) {
-      window.location.href = "login.html";
+      var m = /(?:^#|&)s=([^&]+)/.exec(window.location.hash || "");
+      if (m) {
+        try {
+          sessao = decodeURIComponent(m[1]);
+          sessionStorage.setItem(SESSAO_KEY, sessao);
+        } catch (_e) {
+          sessao = m[1];
+        }
+        try {
+          history.replaceState(null, "", window.location.pathname);
+        } catch (_e) {}
+      }
+    }
+
+    if (!sessao) {
+      window.location.href = "login.html?next=materiais.html";
       return;
     }
 
@@ -738,7 +764,7 @@
       })
       .then(function (r) {
         if (r.status !== 200) {
-          window.location.href = "login.html";
+          window.location.href = "login.html?next=materiais.html";
           return;
         }
 
@@ -784,7 +810,7 @@
       })
       .catch(function (err) {
         console.error("materiais:", err);
-        window.location.href = "login.html";
+        window.location.href = "login.html?next=materiais.html";
       });
   }
 

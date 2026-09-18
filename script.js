@@ -275,52 +275,73 @@
     var alvo = $("#js-planos");
     if (!alvo || !PLANOS.lista) return;
 
-    var planos = PLANOS.lista();
-    alvo.innerHTML = planos
-      .map(function (plano) {
-        var ultra = plano.id === "ultra";
-        var selo = ultra
-          ? '<span class="plano-selo">Mais completo</span>'
-          : "";
-        var destaque = ultra ? " plano-card--ultra" : "";
+    alvo.innerHTML = PLANOS.lista()
+      .map(cardPlano)
+      .join("");
 
-        var itens = [
-          { txt: "Aulas 1 a 6 do curso completo", tem: true },
-          { txt: "Vídeos de todas as aulas", tem: true },
-          { txt: "PDF de todos os materiais das aulas", tem: true },
-          { txt: "Acesso por 1 ano", tem: true },
-          {
-            txt: "10 temas de redação com modelo nota mil pronto",
-            tem: !!plano.incluimaterialExclusivo,
-          },
-        ];
+    // Plano R$ 1: só aparece quando o admin o ativa (consulta em tempo real).
+    if (PLANOS.plano1real) {
+      api("/api/plano1real")
+        .then(function (r) {
+          if (r && r.ok && r.dados && r.dados.ativo) {
+            alvo.insertAdjacentHTML("beforeend", cardPlano(PLANOS.plano1real));
+          }
+        })
+        .catch(function () {});
+    }
+  }
 
-        var lista = itens
-          .map(function (it) {
-            return (
-              '<li class="' + (it.tem ? "" : "excluido") + '">' +
-              escapeHtml(it.txt) +
-              "</li>"
-            );
-          })
-          .join("");
+  function cardPlano(plano) {
+    var ultra = plano.id === "ultra";
+    var avista = Number(plano.parcelas) === 1;
+    var selo = ultra
+      ? '<span class="plano-selo">Mais completo</span>'
+      : "";
+    var destaque = ultra ? " plano-card--ultra" : "";
 
+    var itens = [
+      { txt: "Aulas 1 a 6 do curso completo", tem: true },
+      { txt: "Vídeos de todas as aulas", tem: true },
+      { txt: "PDF de todos os materiais das aulas", tem: true },
+      { txt: "Acesso por 1 ano", tem: true },
+      {
+        txt: "10 temas de redação com modelo nota mil pronto",
+        tem: !!plano.incluimaterialExclusivo,
+      },
+    ];
+
+    var lista = itens
+      .map(function (it) {
         return (
-          '<article class="plano-card' + destaque + ' entrada">' +
-          selo +
-          '<h3 class="plano-nome">' + escapeHtml(plano.nome) + "</h3>" +
-          '<div class="plano-parcela">' + plano.parcelas + "x de " + fmtBRL(plano.preco) +
-          "</div>" +
-          '<div style="margin: 10px 0;"><span class="badge badge--verde">Até ' + plano.parcelas + "x</span></div>" +
-          '<p class="plano-vezes">Parcele em até ' + plano.parcelas + 'x pelo Mercado Pago.</p>' +
-          '<ul class="plano-lista">' + lista + "</ul>" +
-          '<a class="btn ' + (ultra ? "btn--primario" : "btn--azul") + ' btn--bloco" href="cadastro.html?plano=' +
-          plano.id + '">ASSINAR ' + escapeHtml(plano.nome.toUpperCase()) + "</a>" +
-          '<p class="plano-note">Pague em até ' + plano.parcelas + 'x pelo Mercado Pago.</p>' +
-          "</article>"
+          '<li class="' + (it.tem ? "" : "excluido") + '">' +
+          escapeHtml(it.txt) +
+          "</li>"
         );
       })
       .join("");
+
+    var badgeForma = avista ? "À vista" : "Até " + plano.parcelas + "x";
+    var textoForma = avista
+      ? "Pague " + fmtBRL(plano.preco) + " à vista pelo Mercado Pago."
+      : "Parcele em até " + plano.parcelas + "x pelo Mercado Pago.";
+    var noteForma = avista
+      ? "Pague à vista pelo Mercado Pago."
+      : "Pague em até " + plano.parcelas + "x pelo Mercado Pago.";
+
+    return (
+      '<article class="plano-card' + destaque + ' entrada">' +
+      selo +
+      '<h3 class="plano-nome">' + escapeHtml(plano.nome) + "</h3>" +
+      '<div class="plano-parcela">' + plano.parcelas + "x de " + fmtBRL(plano.preco) +
+      "</div>" +
+      '<div style="margin: 10px 0;"><span class="badge badge--verde">' + badgeForma + "</span></div>" +
+      '<p class="plano-vezes">' + textoForma + "</p>" +
+      '<ul class="plano-lista">' + lista + "</ul>" +
+      '<a class="btn ' + (ultra ? "btn--primario" : "btn--azul") + ' btn--bloco" href="cadastro.html?plano=' +
+      plano.id + '">ASSINAR ' + escapeHtml(plano.nome.toUpperCase()) + "</a>" +
+      '<p class="plano-note">' + noteForma + "</p>" +
+      "</article>"
+    );
   }
 
   function renderComoFunciona() {
@@ -354,11 +375,29 @@
     }
     var plano = PLANOS.porId ? PLANOS.porId(planoId) : null;
 
-    var resumo = $("#js-resumo-plano");
-    if (resumo && plano) {
+    function preencherResumo(p) {
+      var resumo = $("#js-resumo-plano");
+      if (!resumo || !p) return;
       resumo.style.display = "flex";
-      $("#js-plano-nome").textContent = plano.nome;
-      $("#js-plano-preco").textContent = "6x de " + fmtBRL(plano.preco);
+      $("#js-plano-nome").textContent = p.nome;
+      $("#js-plano-preco").textContent = p.parcelas + "x de " + fmtBRL(p.preco);
+    }
+    preencherResumo(plano);
+
+    // Plano R$ 1: se o admin desativou, cai para o Básico (o servidor recusa).
+    if (plano && plano.id === "1real") {
+      api("/api/plano1real")
+        .then(function (r) {
+          if (!r || !r.ok || !r.dados || !r.dados.ativo) {
+            planoId = "basico";
+            preencherResumo(PLANOS.porId(planoId));
+            mostrarAlerta("O Plano R$ 1 está desativado por enquanto. Exibindo o Plano Básico.", "erro");
+          }
+        })
+        .catch(function () {
+          planoId = "basico";
+          preencherResumo(PLANOS.porId(planoId));
+        });
     }
 
     // Máscaras leves
@@ -830,6 +869,115 @@
   }
 
   /* ============================================================
+     PAINEL ADMIN — ativar/desativar o Plano R$ 1
+     ============================================================ */
+  function initAdminPlano1real() {
+    var btn = $("#js-btn-plano1-carregar");
+    if (!btn) return;
+
+    var campoChave = $("#campo-admin-key-plano1");
+    var alerta = $("#js-alerta-plano1");
+    var estado = $("#js-plano1-estado");
+    var chk = $("#campo-plano1-ativo");
+    var rotulo = $("#js-switch-rotulo");
+    var row = $("#js-switch-row");
+
+    function setAlerta(txt, tipo) {
+      if (!alerta) return;
+      alerta.textContent = txt;
+      alerta.className = "alerta " + (tipo === "ok" ? "alerta--ok" : "alerta--erro") + " visivel";
+    }
+
+    function aplicar(dados) {
+      if (chk) chk.checked = !!dados.ativo;
+      if (rotulo) {
+        rotulo.textContent = dados.ativo ? "Plano R$ 1 ATIVO" : "Plano R$ 1 DESATIVADO";
+      }
+      if (estado) {
+        estado.className = "badge " + (dados.ativo ? "badge--verde" : "badge--vermelho");
+        estado.textContent = dados.ativo ? "ATIVO" : "DESATIVADO";
+      }
+      if (row) row.style.display = "flex";
+      if (chk) chk.disabled = false;
+    }
+
+    async function carregar() {
+      var chave = campoChave ? campoChave.value.trim() : "";
+      if (!chave) {
+        setAlerta("Informe a ADMIN_KEY para consultar o status do plano.", "erro");
+        return;
+      }
+      guardarAdminKey(chave);
+      var campoGerar = $("#campo-admin-key");
+      var campoAlunos = $("#campo-admin-key-alunos");
+      if (campoGerar) campoGerar.value = chave;
+      if (campoAlunos) campoAlunos.value = chave;
+
+      btn.disabled = true;
+      btn.textContent = "CONSULTANDO…";
+      try {
+        var r = await api("/api/admin/plano1real", {
+          method: "GET",
+          headers: { "Content-Type": "application/json", "x-admin-key": chave },
+        });
+        if (!r.ok || !r.dados || typeof r.dados.ativo !== "boolean") {
+          setAlerta(r.dados.erro || "Falha ao consultar o status. Verifique a ADMIN_KEY.", "erro");
+          return;
+        }
+        aplicar(r.dados);
+        alerta.className = "alerta";
+      } catch (err) {
+        console.error("admin/plano1real:", err);
+        setAlerta("Erro de conexão. Tente novamente.", "erro");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "CONSULTAR STATUS";
+      }
+    }
+
+    async function salvar(ativar) {
+      var chave = campoChave ? campoChave.value.trim() : "";
+      if (!chave) {
+        if (chk) chk.checked = !ativar;
+        setAlerta("Informe a ADMIN_KEY para salvar a mudança.", "erro");
+        return;
+      }
+      if (chk) chk.disabled = true;
+      try {
+        var r = await api("/api/admin/plano1real", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-admin-key": chave },
+          body: JSON.stringify({ ativo: ativar }),
+        });
+        if (!r.ok || !r.dados || typeof r.dados.ativo !== "boolean") {
+          if (chk) chk.checked = !ativar;
+          setAlerta(r.dados.erro || "Falha ao salvar. Verifique a ADMIN_KEY.", "erro");
+          if (chk) chk.disabled = false;
+          return;
+        }
+        aplicar(r.dados);
+        setAlerta(
+          r.dados.ativo
+            ? "Plano R$ 1 ATIVO. O cartão já apareceu na página inicial e o cadastro aceita esse plano."
+            : "Plano R$ 1 DESATIVADO. O cartão sumiu do site e cadastros novos com esse plano serão recusados.",
+          "ok"
+        );
+      } catch (err) {
+        console.error("admin/plano1real:", err);
+        if (chk) chk.checked = !ativar;
+        setAlerta("Erro de conexão ao salvar. Tente novamente.", "erro");
+      }
+    }
+
+    btn.addEventListener("click", carregar);
+    if (chk) {
+      chk.addEventListener("change", function () {
+        salvar(chk.checked);
+      });
+    }
+  }
+
+  /* ============================================================
      PÁGINA DE LOGIN
      ============================================================ */
   function destinoAposLogin() {
@@ -1252,6 +1400,7 @@
       initAdmin();
       initAdminAbas();
       initAdminAlunos();
+      initAdminPlano1real();
     }
     if (pagina === "aluno.html" || window.location.pathname.indexOf("aluno") !== -1) initAluno();
     if (pagina === "materiais.html" || window.location.pathname.indexOf("materiais") !== -1) initMateriais();

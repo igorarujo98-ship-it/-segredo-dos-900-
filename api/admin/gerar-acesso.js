@@ -40,7 +40,7 @@ module.exports = async function handler(req, res) {
     if (!EMAIL_RE.test(email)) return erro(res, 400, "Informe um e-mail válido.");
 
     const plano = PLANOS.porId(planoId);
-    if (!plano) return erro(res, 400, "Plano inválido (use basico ou ultra).");
+    if (!plano || plano.id === "1real") return erro(res, 400, "Plano inválido (use basico ou ultra).");
     if (diasValidade < 1 || diasValidade > 3660) {
       return erro(res, 400, "Validade inválida (min 1 dia, máx 10 anos).");
     }

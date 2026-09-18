@@ -6,6 +6,7 @@
 const { lerJson, ok, erro } = require("./_lib/http.js");
 const alunos = require("./_lib/alunos.js");
 const PLANOS = require("../config/planos.js");
+const plano1real = require("./_lib/plano1real.js");
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -38,7 +39,10 @@ module.exports = async function handler(req, res) {
     if (!validarWhatsapp(whatsapp)) return erro(res, 400, "Informe um WhatsApp válido com DDD.");
 
     const planoObj = PLANOS.porId(plano);
-    if (!planoObj) return erro(res, 400, "Escolha um plano válido (basico ou ultra).");
+    if (!planoObj) return erro(res, 400, "Escolha um plano válido (basico, ultra ou 1real).");
+    if (planoObj.id === "1real" && !(await plano1real.ativo())) {
+      return erro(res, 400, "O Plano R$ 1 está desativado no momento.");
+    }
 
     const aluno = await alunos.criarAluno({ nome, cpf, email, whatsapp, plano });
 

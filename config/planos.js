@@ -32,6 +32,20 @@
       incluimaterialExclusivo: true, // acesso ao "10 temas com modelo nota mil"
     },
 
+    // Plano de captação por R$ 1. Fica oculto e bloqueado quando desativado.
+    // A ativação/desativação é feita pelo administrador no painel (tempo real,
+    // sem precisar publicar código) — o estado fica no armazenamento KV.
+    // NÃO remover este bloco do arquivo: ele é o "cartão" que o painel liga/desliga.
+    plano1real: {
+      id: "1real",
+      nome: "Plano R$ 1",
+      preco: 1.0, // valor único (à vista)
+      precoTotal: 1.0, // 1x / PIX
+      parcelas: 1,
+      urlPagamento: "https://mpago.li/1pvtrRC", // link Mercado Pago (fallback)
+      incluimaterialExclusivo: true, // mesmo benefício do Ultra
+    },
+
     // Pagamento de UPGRADE: do Plano Básico para o Plano Ultra.
     upgrade: {
       id: "upgrade",
@@ -47,9 +61,9 @@
       return [this.basicas, this.ultra];
     },
 
-    /** Retorna um plano pelo id (basico | ultra | upgrade). */
+    /** Retorna um plano pelo id (basico | ultra | 1real | upgrade). */
     porId: function (id) {
-      var plans = this.lista().concat([this.upgrade]);
+      var plans = this.lista().concat([this.upgrade, this.plano1real]);
       for (var i = 0; i < plans.length; i++) {
         if (plans[i].id === id) return plans[i];
       }

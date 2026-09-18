@@ -1,0 +1,23 @@
+# Arquivos que NÃO devem ir para o deploy (Vercel)
+# Testes/prints e cópias de referência locais — manter fora do site público.
+
+# Prints de teste e imagens não usadas
+1.jpeg
+2.jpeg
+3.jpeg
+aguardando.jpeg
+pagamento.jpeg
+hondaturbo.jpeg
+hondatubo2.jpeg
+Retrato de médico com fundo transparente.png
+
+# Cópias de PDF na raiz (os protegidos ficam em api/_arquivos)
+aula ? - curso.pdf.pdf
+
+# Pastas locais de referência duplicadas
+/aulas/
+/materiais/
+
+# Segredos locais nunca vão
+.env*
+!.env.example

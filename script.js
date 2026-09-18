@@ -1239,25 +1239,37 @@
 
     // Aulas
     var grid = $("#js-aulas-aluno");
-    if (grid && AULAS.aulas) {
-      grid.innerHTML = AULAS.aulas
-        .map(function (aula) {
-          var pdfBtn = aula.pdf
-            ? '<a class="btn btn--azul" href="/api/material?aula=' + aula.id + "&sessao=" +
-              encodeURIComponent(sessao) + '">BAIXAR MATERIAL DA AULA</a>'
-            : '<span class="btn btn--contorno" style="cursor: default;">Material em breve</span>';
-          return (
-            "<article class=\"aula-aluno\">" +
-            videoEmbed(aula) +
-            '<div class="info">' +
-            '<span class="num">Aula ' + aula.numero + " · " + escapeHtml(aula.area) + "</span>" +
-            "<h3>" + escapeHtml(aula.titulo) + "</h3>" +
-            "<p>" + escapeHtml(aula.resumo) + "</p>" +
-            '<div class="acoes">' + pdfBtn + "</div>" +
-            "</div></article>"
-          );
-        })
-        .join("");
+    if (grid) {
+      var aulasLista = AULAS && (AULAS.aulas || (AULAS.lista ? AULAS.lista() : null));
+      if (aulasLista && aulasLista.length) {
+        grid.innerHTML = aulasLista
+          .map(function (aula) {
+            var pdfBtn = aula.pdf
+              ? '<a class="btn btn--azul" href="/api/material?aula=' + aula.id + "&sessao=" +
+                encodeURIComponent(sessao) + '">BAIXAR MATERIAL DA AULA</a>'
+              : '<span class="btn btn--contorno" style="cursor: default;">Material em breve</span>';
+            return (
+              "<article class=\"aula-aluno\">" +
+              videoEmbed(aula) +
+              '<div class="info">' +
+              '<span class="num">Aula ' + aula.numero + " · " + escapeHtml(aula.area) + "</span>" +
+              "<h3>" + escapeHtml(aula.titulo) + "</h3>" +
+              "<p>" + escapeHtml(aula.resumo) + "</p>" +
+              '<div class="acoes">' + pdfBtn + "</div>" +
+              "</div></article>"
+            );
+          })
+          .join("");
+      } else {
+        // A config de aulas não carregou (ex.: cache antigo com hash que
+        // virou 404). NUNCA deixa a área vazia/travada: mostra mensagem.
+        grid.innerHTML =
+          '<div class="aula-aluno" style="grid-column: 1 / -1; padding: 34px; text-align: center;">' +
+          '<h3 style="margin: 0 0 8px;">Não foi possível carregar as aulas</h3>' +
+          '<p class="mutado" style="margin: 0 0 18px;">Pode ser um cache antigo do navegador. Toque em "RECARREGAR" abaixo ou atualize a página (F5).</p>' +
+          '<button type="button" class="btn btn--azul" onclick="window.location.reload();">RECARREGAR</button>' +
+          "</div>";
+      }
     }
 
     // Upgrade para Ultra

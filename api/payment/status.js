@@ -30,6 +30,7 @@ module.exports = async function handler(req, res) {
     ok(res, {
       status: aluno.status,
       aprovado: aluno.status === "approved",
+      nome: aluno.nome,
       tokenEnviado: !!aluno.email_enviado,
       // O token só é exposto APÓS o pagamento aprovado, para o aluno
       // copiá-lo na plataforma (página de sucesso) sem depender do e-mail.

@@ -31,6 +31,134 @@
     return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
   }
 
+  /* ============================================================
+     COPIAR CÓDIGO + PDF DO CÓDIGO DE ACESSO
+     ============================================================ */
+  function copiarTexto(texto) {
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = texto;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return !!ok;
+      } catch (_e) {
+        return false;
+      }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard
+        .writeText(texto)
+        .then(function () {
+          return true;
+        })
+        .catch(function () {
+          return Promise.resolve(fallback());
+        });
+    }
+    return Promise.resolve(fallback());
+  }
+
+  // Converte texto para WinAnsi/Latin-1 escapado (o PDF não é UTF-8 puro).
+  function pdfEscape(texto) {
+    var s = String(texto || "");
+    var out = "";
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      var code = s.charCodeAt(i);
+      if (c === "(" || c === ")" || c === "\\") out += "\\" + c;
+      else if (code >= 32 && code <= 126) out += c;
+      else if (code >= 160 && code <= 255) out += "\\" + code.toString(8);
+      else out += "?";
+    }
+    return out;
+  }
+
+  // Gera um PDF simples (A4) com o código de acesso — sem dependências.
+  function gerarPdfSimples(nome, planoNome, codigo) {
+    var lx = 72; // margem esquerda
+    var hoje = new Date().toLocaleDateString("pt-BR");
+    var itens = [];
+    var y = 796;
+
+    function linha(texto, opt) {
+      opt = opt || {};
+      itens.push({
+        texto: texto,
+        negrito: !!opt.negrito,
+        tamanho: opt.tamanho || 12,
+        x: opt.x != null ? opt.x : lx,
+        y: y,
+      });
+      y -= opt.espaco != null ? opt.espaco : 24;
+    }
+
+    linha("O SEGREDO DOS 900+", { negrito: true, tamanho: 20, espaco: 26 });
+    linha("Curso de Redação para o ENEM", { tamanho: 11, espaco: 30 });
+
+    linha("SEU CÓDIGO DE ACESSO", { negrito: true, tamanho: 15, espaco: 36 });
+    linha(String(codigo || "").toUpperCase(), { negrito: true, tamanho: 26, espaco: 36 });
+
+    if (planoNome) linha("Plano: " + planoNome, { espaco: 26 });
+    if (nome) linha("Aluno(a): " + nome, { espaco: 26 });
+    linha("Gerado em: " + hoje, { espaco: 36 });
+
+    linha("Para entrar na área do aluno, use o e-mail do pagamento", { tamanho: 11, espaco: 20 });
+    linha("mais este código em login.html.", { tamanho: 11, espaco: 24 });
+    linha("Este código é individual e intransferível. Não o perca.", { tamanho: 11 });
+
+    var conteudo = ["BT"];
+    itens.forEach(function (it) {
+      conteudo.push("/F" + (it.negrito ? "2" : "1") + " " + it.tamanho + " Tf");
+      conteudo.push("1 0 0 1 " + it.x + " " + it.y + " Tm");
+      conteudo.push("(" + pdfEscape(it.texto) + ") Tj");
+    });
+    conteudo.push("ET");
+    conteudo = conteudo.join("\n");
+
+    var corpo = [
+      "<< /Type /Catalog /Pages 2 0 R >>",
+      "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+      "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+      "<< /Length " + conteudo.length + " >>\nstream\n" + conteudo + "\nendstream",
+    ];
+
+    var saida = "%PDF-1.4\n";
+    var offsets = [];
+    for (var i = 0; i < corpo.length; i++) {
+      offsets.push(saida.length);
+      saida += i + 1 + " 0 obj\n" + corpo[i] + "\nendobj\n";
+    }
+    var xref = saida.length;
+    saida += "xref\n0 " + (corpo.length + 1) + "\n0000000000 65535 f \n";
+    for (var j = 0; j < offsets.length; j++) {
+      saida += ("0000000000" + offsets[j]).slice(-10) + " 00000 n \n";
+    }
+    saida += "trailer\n<< /Size " + (corpo.length + 1) + " /Root 1 0 R >>\nstartxref\n" + xref + "\n%%EOF";
+    return saida;
+  }
+
+  function baixarPdfCodigo(nome, planoNome, codigo) {
+    var texto = gerarPdfSimples(nome, planoNome, codigo);
+    var blob = new Blob([texto], { type: "application/pdf" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "codigo-acesso-900plus.pdf";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 800);
+  }
+
   async function api(url, opts) {
     var opt = Object.assign(
       { headers: { "Content-Type": "application/json" } },
@@ -276,7 +404,11 @@
     if (!alvo || !PLANOS.lista) return;
 
     alvo.innerHTML = PLANOS.lista()
-      .map(cardPlano)
+      .map(function (p) {
+        // Planos são o elemento de conversão: sempre visíveis, sem depender
+        // da animação de scroll (que já deixou cards invisíveis no mobile).
+        return cardPlano(p, true);
+      })
       .join("");
 
     // Plano R$ 1: só aparece quando o admin o ativa (consulta em tempo real).
@@ -1306,6 +1438,17 @@
 
     var tentativas = 0;
 
+    var ultimoToken = "";
+    var ultimoNome = "";
+    var ultimoPlanoNome = "";
+    var codigoMsgEl = $("#js-codigo-msg");
+
+    function msgCodigo(txt, tipo) {
+      if (!codigoMsgEl) return;
+      codigoMsgEl.textContent = txt || "";
+      codigoMsgEl.style.color = tipo === "ok" ? "var(--green2)" : "var(--red)";
+    }
+
     function renderAprovado(dados) {
       icone.className = "sucesso-icone ok";
       icone.textContent = "✓";
@@ -1322,6 +1465,12 @@
         if (bloco) bloco.classList.remove("escondido");
         var codigoEl = $("#js-codigo");
         if (codigoEl) codigoEl.textContent = token;
+        var acoesCodigo = $("#js-codigo-acoes");
+        if (acoesCodigo) acoesCodigo.style.display = "flex";
+        ultimoToken = token;
+        ultimoNome = (dados && dados.nome) || "";
+        var planoDef = dados && dados.plano && PLANOS.porId ? PLANOS.porId(dados.plano) : null;
+        ultimoPlanoNome = (planoDef && planoDef.nome) || (dados && dados.plano) || "";
       }
       acoes.innerHTML =
         '<a class="btn btn--primario btn--bloco" href="login.html">ENTRAR COM MEU CÓDIGO</a>' +
@@ -1369,7 +1518,49 @@
         if (btn) {
           btn.addEventListener("click", function () {
             tentativas = 0;
-            consultar();
+// Botões Copiar / Baixar PDF (umatir quando o código estiver disponível)
+    var copiarBtn = $("#js-btn-copiar");
+    var pdfBtn = $("#js-btn-baixar-pdf");
+    var codigoDiv = $("#js-codigo");
+
+    if (copiarBtn) {
+      copiarBtn.addEventListener("click", function () {
+        if (!ultimoToken) return;
+        copiarTexto(ultimoToken).then(function (ok) {
+          msgCodigo(
+            ok ? "Código copiado para a área de transferência!" : "Não foi possível copiar. Selecione o código acima.",
+            ok ? "ok" : "erro"
+          );
+        });
+      });
+    }
+
+    if (pdfBtn) {
+      pdfBtn.addEventListener("click", function () {
+        if (!ultimoToken) return;
+        try {
+          baixarPdfCodigo(ultimoNome, ultimoPlanoNome, ultimoToken);
+          msgCodigo("PDF baixado! Guarde-o em um lugar seguro.", "ok");
+        } catch (e) {
+          console.error("gerarPdf:", e);
+          msgCodigo("Não foi possível gerar o PDF. Use o botão Copiar.", "erro");
+        }
+      });
+    }
+
+    if (codigoDiv) {
+      codigoDiv.addEventListener("click", function () {
+        if (!ultimoToken) return;
+        copiarTexto(ultimoToken).then(function (ok) {
+          msgCodigo(
+            ok ? "Código copiado! Cole onde quiser salvar." : "Não foi possível copiar. Selecione o texto.",
+            ok ? "ok" : "erro"
+          );
+        });
+      });
+    }
+
+    consultar();
           });
         }
       }

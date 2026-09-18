@@ -260,7 +260,12 @@ section {
   .nav-links.aberto { transform: translateY(0); }
   .nav-links a { padding: 14px 4px; border-bottom: 1px solid var(--line-soft); }
   .burger { display: block; }
-  .nav-acoes .btn-diminuir { display: none; }
+  .nav-acoes .nav-cta { display: none; }
+  .nav-mobile-entrar { display: block; }
+}
+
+@media (min-width: 861px) {
+  .nav-mobile-entrar { display: none; }
 }
 
 /* ---------------- Hero ---------------- */

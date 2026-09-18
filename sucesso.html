@@ -268,7 +268,12 @@ section {
   .nav-links.aberto { transform: translateY(0); }
   .nav-links a { padding: 14px 4px; border-bottom: 1px solid var(--line-soft); }
   .burger { display: block; }
-  .nav-acoes .btn-diminuir { display: none; }
+  .nav-acoes .nav-cta { display: none; }
+  .nav-mobile-entrar { display: block; }
+}
+
+@media (min-width: 861px) {
+  .nav-mobile-entrar { display: none; }
 }
 
 /* ---------------- Hero ---------------- */
@@ -1472,8 +1477,13 @@ dialog .btn { margin-bottom: 12px; }
       </div>
       <div class="escondido" id="js-bloco-codigo" style="margin-top: 14px;">
         <p class="mutado" style="margin: 0;">Seu código de acesso (copie e guarde, não perca):</p>
-        <div class="codigo" id="js-codigo">—</div>
-        <p class="mutado" style="font-size: 0.85rem; margin: 0;">
+        <div class="codigo" id="js-codigo" style="cursor: pointer;">—</div>
+        <div class="codigo-acoes" id="js-codigo-acoes" style="display: none; gap: 10px; flex-wrap: wrap; margin-top: 4px;">
+          <button type="button" id="js-btn-copiar" class="btn btn--azul" style="flex: 1; min-width: 170px;">COPIAR CÓDIGO</button>
+          <button type="button" id="js-btn-baixar-pdf" class="btn btn--contorno" style="flex: 1; min-width: 170px;">BAIXAR PDF DO CÓDIGO</button>
+        </div>
+        <p class="mutado" id="js-codigo-msg" style="font-size: 0.8rem; margin: 6px 0 0;"></p>
+        <p class="mutado" style="font-size: 0.85rem; margin: 6px 0 0;">
           Use o e-mail do pagamento + este código em
           <strong>login.html</strong> para entrar na área do aluno.
         </p>
@@ -1486,6 +1496,6 @@ dialog .btn { margin-bottom: 12px; }
   <script src="config/planos.js?v=fb1c2fe1"></script>
   <script src="config/aulas.js?v=33f3c906"></script>
   <script src="config/conteudo.js?v=9744da63"></script>
-  <script src="script.js?v=d16f9263"></script>
+  <script src="script.js?v=0094b57c"></script>
 </body>
 </html>

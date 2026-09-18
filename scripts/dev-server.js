@@ -43,8 +43,6 @@ const ROTAS_API = [
   { caminho: "/api/auth/login", arquivo: "api/auth/login.js" },
   { caminho: "/api/admin/gerar-acesso", arquivo: "api/admin/gerar-acesso.js" },
   { caminho: "/api/admin/alunos", arquivo: "api/admin/alunos.js" },
-  { caminho: "/api/admin/plano1real", arquivo: "api/admin/plano1real.js" },
-  { caminho: "/api/plano1real", arquivo: "api/plano1real.js" },
   { caminho: "/api/email/enviar-token", arquivo: "api/email/enviar-token.js" },
   { caminho: "/api/material", arquivo: "api/material.js" },
 ];

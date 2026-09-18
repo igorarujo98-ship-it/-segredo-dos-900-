@@ -281,7 +281,7 @@
 
     // Plano R$ 1: só aparece quando o admin o ativa (consulta em tempo real).
     if (PLANOS.plano1real) {
-      api("/api/plano1real")
+      api("/api/payment/status?modo=plano1")
         .then(function (r) {
           if (r && r.ok && r.dados && r.dados.ativo) {
             alvo.insertAdjacentHTML("beforeend", cardPlano(PLANOS.plano1real));
@@ -386,7 +386,7 @@
 
     // Plano R$ 1: se o admin desativou, cai para o Básico (o servidor recusa).
     if (plano && plano.id === "1real") {
-      api("/api/plano1real")
+      api("/api/payment/status?modo=plano1")
         .then(function (r) {
           if (!r || !r.ok || !r.dados || !r.dados.ativo) {
             planoId = "basico";
@@ -916,10 +916,7 @@
       btn.disabled = true;
       btn.textContent = "CONSULTANDO…";
       try {
-        var r = await api("/api/admin/plano1real", {
-          method: "GET",
-          headers: { "Content-Type": "application/json", "x-admin-key": chave },
-        });
+        var r = await api("/api/payment/status?modo=plano1");
         if (!r.ok || !r.dados || typeof r.dados.ativo !== "boolean") {
           setAlerta(r.dados.erro || "Falha ao consultar o status. Verifique a ADMIN_KEY.", "erro");
           return;
@@ -944,10 +941,10 @@
       }
       if (chk) chk.disabled = true;
       try {
-        var r = await api("/api/admin/plano1real", {
+        var r = await api("/api/admin/gerar-acesso", {
           method: "POST",
           headers: { "Content-Type": "application/json", "x-admin-key": chave },
-          body: JSON.stringify({ ativo: ativar }),
+          body: JSON.stringify({ acao: "plano1", ativo: ativar }),
         });
         if (!r.ok || !r.dados || typeof r.dados.ativo !== "boolean") {
           if (chk) chk.checked = !ativar;

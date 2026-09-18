@@ -17,6 +17,7 @@ const { lerJson, ok, erro } = require("../_lib/http.js");
 const alunos = require("../_lib/alunos.js");
 const mailer = require("../_lib/mailer.js");
 const PLANOS = require("../../config/planos.js");
+const plano1real = require("../_lib/plano1real.js");
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -28,6 +29,16 @@ module.exports = async function handler(req, res) {
     }
 
     const dados = await lerJson(req);
+
+    // Ação especial: ligar/desligar a venda do Plano R$ 1. Fica neste endpoint
+    // (já protegido pela ADMIN_KEY) para não estourar o limite de 12 funções
+    // serverless do plano Hobby da Vercel.
+    if (dados.acao === "plano1") {
+      const ativo = dados && typeof dados.ativo === "boolean" ? dados.ativo : true;
+      const novo = await plano1real.setarStatus(ativo);
+      return ok(res, { ativo: novo });
+    }
+
     const nome = String(dados.nome || "").trim();
     const email = String(dados.email || "").trim().toLowerCase();
     const whatsapp = String(dados.whatsapp || "").trim();

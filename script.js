@@ -284,20 +284,23 @@
       api("/api/payment/status?modo=plano1")
         .then(function (r) {
           if (r && r.ok && r.dados && r.dados.ativo) {
-            alvo.insertAdjacentHTML("beforeend", cardPlano(PLANOS.plano1real));
+            // Inserido após o observer de scroll, por isso nasce SEM a classe
+            // "entrada" (que deixa opacity:0) — senão o card ficaria invisível.
+            alvo.insertAdjacentHTML("beforeend", cardPlano(PLANOS.plano1real, true));
           }
         })
         .catch(function () {});
     }
   }
 
-  function cardPlano(plano) {
+  function cardPlano(plano, semAnimacao) {
     var ultra = plano.id === "ultra";
     var avista = Number(plano.parcelas) === 1;
     var selo = ultra
       ? '<span class="plano-selo">Mais completo</span>'
       : "";
     var destaque = ultra ? " plano-card--ultra" : "";
+    var animacao = semAnimacao ? "" : " entrada";
 
     var itens = [
       { txt: "Aulas 1 a 6 do curso completo", tem: true },
@@ -329,7 +332,7 @@
       : "Pague em até " + plano.parcelas + "x pelo Mercado Pago.";
 
     return (
-      '<article class="plano-card' + destaque + ' entrada">' +
+      '<article class="plano-card' + destaque + animacao + '">' +
       selo +
       '<h3 class="plano-nome">' + escapeHtml(plano.nome) + "</h3>" +
       '<div class="plano-parcela">' + plano.parcelas + "x de " + fmtBRL(plano.preco) +

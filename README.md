@@ -212,7 +212,7 @@ no Mercado Pago. Para gerar um código manualmente (cortesia), use o **painel de
 O amigo entra em `login.html` com o **e-mail + código** normalmente. Se o e-mail não
 chegou, o código também aparece na tela do painel para você copiar e enviar.
 
-> ⚠️ **Segurança:** qualquer pessoa com a `ADMIN_KEY` consegue gerar acessos.
+> **Segurança:** qualquer pessoa com a `ADMIN_KEY` consegue gerar acessos.
 > Nunca compartilhe essa chave. O painel também funciona via API:
 >
 > ```bash

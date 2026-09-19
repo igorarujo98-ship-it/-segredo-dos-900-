@@ -955,7 +955,7 @@
             "<tr>" +
             '<td><div class="aluno-nome">' + escapeHtml(a.nome) + "</div>" +
             '<div class="aluno-email">' + escapeHtml(a.email) + "</div>" +
-            (a.whatsapp ? '<div class="aluno-email">📱 ' + escapeHtml(a.whatsapp) + "</div>" : "") +
+            (a.whatsapp ? '<div class="aluno-email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:0.95em;height:0.95em;vertical-align:-0.14em;display:inline-block;margin-right:4px;" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>' + escapeHtml(a.whatsapp) + "</div>" : "") +
             "</td>" +
             "<td>" + escapeHtml(a.planoNome || a.plano) + "</td>" +
             "<td>" + badgeStatus(a) + "</td>" +
@@ -1176,7 +1176,7 @@
     var vid = aula.videoId;
     if (!vid || String(vid).indexOf("TROQUE_") === 0) {
       return (
-        '<div class="aula-bloqueada"><div class="selo">🎬</div>' +
+        '<div class="aula-bloqueada"><div class="selo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:2rem;height:2rem;display:inline-block;" aria-hidden="true"><path d="M3.5 17.5a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-7h-17v7z"/><path d="M6 10.5l2-4.5M11 10.5l2-4.5M16 10.5l2-4.5"/></svg></div>' +
         "<p>Aula gravada chegando na sua plataforma. Em breve você poderá assistir aqui.</p></div>"
       );
     }
@@ -1463,8 +1463,8 @@
 
     function renderAprovado(dados) {
       icone.className = "sucesso-icone ok";
-      icone.textContent = "✓";
-      titulo.textContent = "Pagamento confirmado! 🎉";
+      icone.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#04110a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>';
+      titulo.textContent = "Pagamento confirmado!";
       mensagem.innerHTML =
         "Seu acesso foi liberado. Copie o código abaixo e <strong>salve-o em um lugar seguro</strong> — ele não pode ser perdido.";
       passos.classList.remove("escondido");

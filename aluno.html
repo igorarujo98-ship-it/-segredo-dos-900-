@@ -663,9 +663,13 @@ section {
 }
 
 .material-highlight li::before {
-  content: "✓";
-  color: var(--green2);
-  font-weight: 900;
+  content: "";
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  background-color: var(--green2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 @media (max-width: 860px) {
@@ -759,10 +763,13 @@ section {
 }
 
 .plano-lista li::before {
-  content: "✓";
-  color: var(--green2);
-  font-weight: 900;
+  content: "";
+  width: 18px;
+  height: 18px;
   flex: 0 0 auto;
+  background-color: var(--green2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .plano-lista li.excluido {
@@ -770,8 +777,13 @@ section {
 }
 
 .plano-lista li.excluido::before {
-  content: "✕";
-  color: #64748b;
+  content: "";
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  background-color: #64748b;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .plano-note {
@@ -1351,7 +1363,7 @@ section {
 }
 
 .passo-lista p { margin: 0; font-size: 0.9rem; color: var(--muted); padding: 5px 0; display: flex; gap: 10px; }
-.passo-lista p::before { content: "→"; color: var(--blue2); font-weight: 900; flex: 0 0 auto; }
+.passo-lista p::before { content: ""; width: 16px; height: 16px; flex: 0 0 auto; align-self: center; background-color: var(--blue2); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; }
 
 .spinner {
   display: inline-block;
@@ -1460,7 +1472,7 @@ dialog .btn { margin-bottom: 12px; }
     <main class="aluno-corpo">
       <div class="container">
         <div class="saudacao">
-          <h1>Olá, <span class="gota" id="js-saudacao-nome">…</span>! 👋</h1>
+          <h1>Olá, <span class="gota" id="js-saudacao-nome">…</span>! <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;vertical-align:-0.18em;display:inline-block" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg></h1>
           <p class="mutado" id="js-saudacao-sub">Bem-vindo(a) à sua área do aluno.</p>
         </div>
 
@@ -1485,7 +1497,7 @@ dialog .btn { margin-bottom: 12px; }
 
         <div class="upgrade-banner escondido" id="js-upgrade-banner">
           <div>
-            <h3>Desbloqueie o material exclusivo 🚀</h3>
+            <h3>Desbloqueie o material exclusivo <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:1.1em;height:1.1em;vertical-align:-0.22em;display:inline-block" aria-hidden="true"><path d="M12 2c2.5 3.6 4 7.8 4 11a4 4 0 0 1-8 0c0-3.2 1.5-7.4 4-11z"/><circle cx="12" cy="7.5" r="1.6"/><path d="M8.5 10.5L5 17.5l3.3-1"/><path d="M15.5 10.5L19 17.5l-3.3-1"/><path d="M12 13.5l-1.6 2h3.2L12 13.5z"/></svg></h3>
             <p>
               O <strong>10 temas de redação com modelo nota mil pronto</strong> é exclusivo do Plano Ultra.
               Faça o upgrade para ter acesso a esse material e a todo o curso.

@@ -49,7 +49,7 @@
           "As 5 competências (200 pontos cada)",
           "Roteiro dos 5 pilares do texto",
         ],
-        videoId: "NoLj0YSuTDg",
+        videoId: null,
         pdf: "aula1.pdf",
       },
       {
@@ -66,7 +66,7 @@
           "Conclusão — os 3 movimentos",
           "Template pronto da redação",
         ],
-        videoId: "U4qc9SuYHDU",
+        videoId: null,
         pdf: "aula2.pdf",
       },
       {
@@ -83,7 +83,7 @@
           "Apontar os 2 causadores",
           "Frase de finalização",
         ],
-        videoId: "oYnK7f-t7tI",
+        videoId: null,
         pdf: "aula3.pdf",
       },
       {
@@ -100,7 +100,7 @@
           "Opinião cidadã",
           "Conectivos que caíram em desuso",
         ],
-        videoId: "Uxt9HJchFxk",
+        videoId: null,
         pdf: "aula4.pdf",
       },
       {
@@ -117,7 +117,7 @@
           "Frase de finalização",
           "Ciclo completo do texto",
         ],
-        videoId: "GZLunWVPP44",
+        videoId: null,
         pdf: "aula5.pdf",
       },
       {
@@ -134,7 +134,7 @@
           "Fechando com a intervenção",
           "Revisão final nota máxima",
         ],
-        videoId: "pAkM6jHxqY8",
+        videoId: null,
         pdf: "aula6.pdf", // arquivo em api/_arquivos/aulas/aula6.pdf
       },
     ],
